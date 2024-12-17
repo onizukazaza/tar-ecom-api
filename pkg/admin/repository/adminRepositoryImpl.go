@@ -1,22 +1,19 @@
 package repository
 
 import (
-	"log"
-
 	"github.com/jmoiron/sqlx"
+	"github.com/gofiber/fiber/v2/log"
 	"github.com/onizukazaza/tar-ecom-api/entities"
 )
 
 type adminRepositoryImpl struct {
 	db     *sqlx.DB
-	logger *log.Logger
 }
 
 
-func NewAdminRepositoryImpl(db *sqlx.DB, logger *log.Logger) AdminRepository {
+func NewAdminRepositoryImpl(db *sqlx.DB ) AdminRepository {
 	return &adminRepositoryImpl{
 		db:     db,
-		logger: logger,
 	}
 }
 
@@ -28,7 +25,7 @@ func (r *adminRepositoryImpl) Listing() ([]*entities.User, error) {
 
 	err := r.db.Select(&userList, query)
 	if err != nil {
-		r.logger.Printf("Failed to list users: %v", err)
+		log.Errorf("Failed to list users: %v", err)
 		return nil, err
 	}
 
