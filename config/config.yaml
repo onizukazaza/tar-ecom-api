@@ -1,0 +1,16 @@
+server:
+  port: 8080
+  allowOrigins:
+    - "*"
+  bodyLimit: 1048576  
+  timeout: 30s # Seconds
+ 
+
+database:
+  host: localhost
+  port: 5432
+  user: postgres
+  password: 123456
+  dbname: postgres
+  sslmode: disable
+  schema: public
