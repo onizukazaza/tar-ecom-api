@@ -1,11 +1,9 @@
 package exception
 
-// import "fmt"
+type UserListing struct {
 
-// type  struct {
-// 	ID int
-// }
+}
 
-// func (e *AdminCreating) Error() string {
-// 	return fmt.Sprintf("UserID: %d failed to create", e.ID) 
-// }
+func(e *UserListing) Error() string {
+	return "user listing failed"
+}

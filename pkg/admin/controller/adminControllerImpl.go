@@ -2,7 +2,9 @@ package controller
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"net/http"
 	_adminService "github.com/onizukazaza/tar-ecom-api/pkg/admin/service"
+	"github.com/onizukazaza/tar-ecom-api/pkg/custom"
 )
 
 type adminControllerImpl struct {
@@ -18,7 +20,8 @@ func NewAdminControllerImpl(
 func (c *adminControllerImpl) Listing(ctx *fiber.Ctx) error {
 	userModelList , err := c.adminService.Listing()
 	if err!= nil {
-		return ctx.Status(fiber.StatusInternalServerError).SendString(err.Error())
+		// return ctx.Status(fiber.StatusInternalServerError).SendString(err.Error())
+		return custom.CustomError(ctx, http.StatusInternalServerError, err.Error())
     }
 	return ctx.Status(fiber.StatusOK).JSON(userModelList)
 }
