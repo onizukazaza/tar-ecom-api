@@ -12,10 +12,8 @@ type adminRepositoryImpl struct {
 }
 
 
-func NewAdminRepositoryImpl(db *sqlx.DB ) AdminRepository {
-	return &adminRepositoryImpl{
-		db:     db,
-	}
+func NewAdminRepositoryImpl(db *sqlx.DB ) *adminRepositoryImpl {
+	return &adminRepositoryImpl{db: db}
 }
 
 
