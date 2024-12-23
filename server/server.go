@@ -31,7 +31,6 @@ var (
 	once   sync.Once
 )
 
-// NewFiberServer initializes and returns a new Fiber server
 func NewFiberServer(conf *config.Config, db *sqlx.DB) *fiberServer {
 	// Initialize Fiber application
 	fiberApp := fiber.New(fiber.Config{
@@ -53,30 +52,31 @@ func NewFiberServer(conf *config.Config, db *sqlx.DB) *fiberServer {
 func (s *fiberServer) Start() {
 	s.initMiddlewares()
 	s.initRoutes()
-	s.initUserRouter()
+	s.initAdminRouter()
+	s.initProductManagingRouter()
 	s.app.Use(getCORSMiddleware(s.conf.Server.AllowOrigins))
 	s.app.Use(getTimeoutMiddleware(s.conf.Server.Timeout))
-
+	
 	// Graceful shutdown
 	quitCh := make(chan os.Signal, 1)
 	signal.Notify(quitCh, syscall.SIGINT, syscall.SIGTERM)
 	go s.gracefullyShutdown(quitCh)
-
+	
 	// Start server
 	s.httpListening()
 }
 
 func (s *fiberServer) initMiddlewares() {
-	// Recover middleware to handle panics
-	s.app.Use(recover.New())
-
-	// Logger middleware to log HTTP requests
-	s.app.Use(logger.New(logger.Config{
+	
+	customLogger := logger.New(logger.Config{
 		Format:     "[${time}] ${status} - ${method} ${path} - ${latency}\n",
 		TimeFormat: "2006-01-02 15:04:05",
 		TimeZone:   "Local",
-		
-	}))
+	})
+
+	s.app.Use(recover.New())
+
+	s.app.Use(customLogger)
 }
 
 func (s *fiberServer) initRoutes() {
@@ -84,13 +84,9 @@ func (s *fiberServer) initRoutes() {
 	s.app.Get("/v1/healthcheck", s.healthCheck)
 	s.app.Get("/panic", func(c *fiber.Ctx) error {
 		panic("This is a test panic")
-		
 	})
-	//test  timeouts 
-	s.app.Get("/long-process", func(c *fiber.Ctx) error {
-		time.Sleep(100 * time.Second) // Simulate long processing
-		return c.SendString("This took too long!")
-	})
+
+
 }
 
 func (s *fiberServer) httpListening() {
@@ -112,12 +108,12 @@ func (s *fiberServer) gracefullyShutdown(quitCh <-chan os.Signal) {
 	if err := s.app.ShutdownWithContext(ctx); err != nil {
 		log.Fatalf("[ERROR] Error shutting down: %s", err)
 	}
-	log.Println("[INFO] Server stopped")
+	log.Println("[INFO] Server stopped successfully.")
 }
 
 // Routes Handlers
 func (s *fiberServer) healthCheck(c *fiber.Ctx) error {
-	// Example database health check with sqlx
+	// Database health check with sqlx
 	var result string
 	err := s.db.Get(&result, "SELECT 'UP' as status")
 	if err != nil {
@@ -158,6 +154,3 @@ func getCORSMiddleware(allowOrigins []string) fiber.Handler {
 		AllowMethods: "GET,POST,PUT,DELETE,OPTIONS",
 	})
 }
-
-
-

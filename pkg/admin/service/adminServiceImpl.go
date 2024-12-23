@@ -24,7 +24,7 @@ func (s *adminServiceImpl) Listing() ([]*_adminModel.User, error) {
 
 	adminModelList := make([]*_adminModel.User, 0)
 	for _, user := range userList {
-		adminModelList = append(adminModelList, user.ToItemModel())
+		adminModelList = append(adminModelList, user.ToUserModel())
 	}
 
 	return adminModelList, nil
