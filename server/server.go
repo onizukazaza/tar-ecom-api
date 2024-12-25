@@ -54,20 +54,21 @@ func (s *fiberServer) Start() {
 	s.initRoutes()
 	s.initAdminRouter()
 	s.initProductManagingRouter()
+	s.initProductRouter()
 	s.app.Use(getCORSMiddleware(s.conf.Server.AllowOrigins))
 	s.app.Use(getTimeoutMiddleware(s.conf.Server.Timeout))
-	
+
 	// Graceful shutdown
 	quitCh := make(chan os.Signal, 1)
 	signal.Notify(quitCh, syscall.SIGINT, syscall.SIGTERM)
 	go s.gracefullyShutdown(quitCh)
-	
+
 	// Start server
 	s.httpListening()
 }
 
 func (s *fiberServer) initMiddlewares() {
-	
+
 	customLogger := logger.New(logger.Config{
 		Format:     "[${time}] ${status} - ${method} ${path} - ${latency}\n",
 		TimeFormat: "2006-01-02 15:04:05",
@@ -85,7 +86,6 @@ func (s *fiberServer) initRoutes() {
 	s.app.Get("/panic", func(c *fiber.Ctx) error {
 		panic("This is a test panic")
 	})
-
 
 }
 

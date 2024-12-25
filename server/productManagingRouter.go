@@ -11,15 +11,11 @@ import (
 func (s *fiberServer) initProductManagingRouter() {
     // s.app.Use(logger.New())
 
-	// Initialize Router
 	router := s.app.Group("/items-product")
-
-	// Initialize dependencies
 	productManagingRepository := _productManagingRepository.NewProductManagingRepositoryImpl(s.db)
 	productManagingService := _productManagingService.NewProductManagingServiceImpl(productManagingRepository)
 	productManagingController := _productManagingController.NewProductManagingControllerImpl(productManagingService)
 
-	// Define routes
-	router.Get("", productManagingController.Listing)        // Route สำหรับ listing สินค้าทั้งหมด
-	router.Get("/:id", productManagingController.GetProductByID) // Route สำหรับค้นหาสินค้าตาม ID
+	router.Get("", productManagingController.Listing)  
+	router.Get("/:id", productManagingController.GetProductByID) 
 }
