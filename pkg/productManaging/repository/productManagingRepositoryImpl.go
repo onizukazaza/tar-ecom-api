@@ -182,6 +182,7 @@ func (r *productManagingRepositoryImpl) Listing(filter *_productManagingModel.Fi
     WHERE 1=1
     `
 
+	// Apply Filter
 	if filter.Gender != "" {
 		baseQuery += " AND p.gender = :gender"
 	}
@@ -192,6 +193,7 @@ func (r *productManagingRepositoryImpl) Listing(filter *_productManagingModel.Fi
 	}
 	defer rows.Close()
 
+	// Process rows
 	productMap := make(map[uuid.UUID]*_productManagingModel.ProductDetail)
 	imageMap := make(map[string]struct{})
 	variationMap := make(map[string]struct{})

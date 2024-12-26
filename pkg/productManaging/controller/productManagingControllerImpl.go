@@ -22,21 +22,21 @@ func NewProductManagingControllerImpl(
 
 func (c *productManagingControllerImpl) Listing(ctx *fiber.Ctx) error {
 
-    filter := &_productManagingModel.FilterRequest{}
+	filter := &_productManagingModel.FilterRequest{}
+	customRequest := custom.NewCustomFiberRequest(ctx)
 
+	if err := customRequest.Bind(filter); err != nil {
+		return custom.CustomError(ctx, fiber.StatusBadRequest, "Invalid query parameters: "+err.Error())
+	}
 
-    customRequest := custom.NewCustomFiberRequest(ctx)
-    if err := customRequest.Bind(filter); err != nil {
-        return custom.CustomError(ctx, fiber.StatusBadRequest, "Invalid query parameters: "+err.Error())
-    }
+	// 2. เรียก Service Layer พร้อม Filter
+	productModelList, err := c.productManagingService.Listing(filter)
+	if err != nil {
+		return custom.CustomError(ctx, fiber.StatusInternalServerError, "Failed to fetch product list: "+err.Error())
+	}
 
-    productModelList, err := c.productManagingService.Listing(filter)
-    if err != nil {
-        return custom.CustomError(ctx, fiber.StatusInternalServerError, "Failed to fetch product list: "+err.Error())
-    }
-
-   
-    return ctx.Status(fiber.StatusOK).JSON(productModelList)
+	// 3. ส่ง Response
+	return ctx.Status(fiber.StatusOK).JSON(productModelList)
 }
 
 

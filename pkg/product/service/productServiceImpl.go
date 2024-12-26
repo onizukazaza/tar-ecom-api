@@ -116,7 +116,7 @@ func (s *productServiceImpl) EditProduct(req *_productModel.ProductEditingReq) e
 	// Fetch existing product
 	existingProduct, err := s.productManagingRepository.GetProductByID(productID)
 	if err != nil {
-		return fmt.Errorf("failed to fetch existing product: %w", err)
+		return err
 	}
 
 	// Update product details
@@ -178,7 +178,7 @@ func (s *productServiceImpl) updateProductVariations(productID uuid.UUID, variat
 	for _, variation := range variations {
 		// แปลงข้อมูลที่อนุญาตให้แก้ไข
 		updateData := entities.ProductVariation{
-			ID:              uuid.MustParse(variation.ID), // ต้องมี ID
+			ID:              uuid.MustParse(variation.ID), 
 			ProductID:       productID,
 			VariationPrice:  variation.VariationPrice,
 			Quantity:        variation.Quantity,

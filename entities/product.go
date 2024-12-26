@@ -7,7 +7,7 @@ import (
 	_productManagingModel "github.com/onizukazaza/tar-ecom-api/pkg/productManaging/model"
 )
 
-// นิยามประเภท Gender
+
 type Gender string
 
 const (

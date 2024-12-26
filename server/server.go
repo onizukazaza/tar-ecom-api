@@ -52,7 +52,8 @@ func NewFiberServer(conf *config.Config, db *sqlx.DB) *fiberServer {
 func (s *fiberServer) Start() {
 	s.initMiddlewares()
 	s.initRoutes()
-	s.initAdminRouter()
+	// s.initAdminRouter()
+	s.initUserRouter()
 	s.initProductManagingRouter()
 	s.initProductRouter()
 	s.app.Use(getCORSMiddleware(s.conf.Server.AllowOrigins))

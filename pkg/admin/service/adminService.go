@@ -1,7 +1,7 @@
 package service 
 
 import (
-    _adminModel "github.com/onizukazaza/tar-ecom-api/pkg/admin/model"
+    _adminModel "github.com/onizukazaza/tar-ecom-api/pkg/user/model"
 )
 
 type AdminService interface {

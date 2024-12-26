@@ -21,6 +21,7 @@ func NewProductManagingServiceImpl(productManagingRepository _productManagingRep
 
 
 func (s *productManagingServiceImpl) Listing(filter *_productManagingModel.FilterRequest) ([]*_productManagingModel.ProductDetail, error) {
+
 	products, err := s.productManagingRepository.Listing(filter)
 	if err != nil {
 		log.Printf("Error fetching products: %v", err)

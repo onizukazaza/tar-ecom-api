@@ -42,8 +42,8 @@ type (
 		SizeType string `json:"size_type"`
 	}
 
-	FilterRequest struct {
-    Gender    string `query:"gender" validate:"omitempty"`
-
-	}
 )
+
+type FilterRequest struct {
+	Gender string `query:"gender" validate:"omitempty,oneof=male female"`
+}

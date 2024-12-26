@@ -2,9 +2,9 @@ package repository
 
 import (
 	"github.com/jmoiron/sqlx"
-	"github.com/gofiber/fiber/v2/log"
-	"github.com/onizukazaza/tar-ecom-api/entities"
-	_userlistexception "github.com/onizukazaza/tar-ecom-api/pkg/admin/exception"
+	// "github.com/gofiber/fiber/v2/log"
+	// "github.com/onizukazaza/tar-ecom-api/entities"
+	// _userlistexception "github.com/onizukazaza/tar-ecom-api/pkg/admin/exception"
 )
 
 type adminRepositoryImpl struct {
@@ -12,21 +12,21 @@ type adminRepositoryImpl struct {
 }
 
 
-func NewAdminRepositoryImpl(db *sqlx.DB ) *adminRepositoryImpl {
-	return &adminRepositoryImpl{db: db}
-}
+// func NewAdminRepositoryImpl(db *sqlx.DB ) *adminRepositoryImpl {
+// 	return &adminRepositoryImpl{db: db}
+// }
 
 
-func (r *adminRepositoryImpl) Listing() ([]*entities.User, error) {
-	userList := make([]*entities.User, 0)
+// func (r *adminRepositoryImpl) Listing() ([]*entities.User, error) {
+// 	userList := make([]*entities.User, 0)
 
-	query := "SELECT * FROM users"
+// 	query := "SELECT * FROM users"
 
-	err := r.db.Select(&userList, query)
-	if err != nil {
-		log.Errorf("Failed to list users: %v", err)
-		return nil, &_userlistexception.UserListing{}
-	}
+// 	err := r.db.Select(&userList, query)
+// 	if err != nil {
+// 		log.Errorf("Failed to list users: %v", err)
+// 		return nil, &_userlistexception.UserListing{}
+// 	}
 
-	return userList, nil
-}
+// 	return userList, nil
+// }
