@@ -45,5 +45,5 @@ type (
 )
 
 type FilterRequest struct {
-	Gender string `query:"gender" validate:"omitempty,oneof=male female"`
+    Gender string `query:"gender" validate:"omitempty,oneof=male female"`
 }

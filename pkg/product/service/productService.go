@@ -7,5 +7,6 @@ type ProductService interface {
     CreateProduct(req *_productModel.ProductCreatingReq) error
     EditProduct(req *_productModel.ProductEditingReq) error
     DeleteProduct(productID string) error 
+    DeleteProductWithSeller(productID string, sellerID string) error
     
 }

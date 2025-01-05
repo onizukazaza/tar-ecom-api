@@ -5,11 +5,11 @@ import (
 	_productRepository "github.com/onizukazaza/tar-ecom-api/pkg/product/repository"
 	_productService "github.com/onizukazaza/tar-ecom-api/pkg/product/service"
 	_productManagingRepository "github.com/onizukazaza/tar-ecom-api/pkg/productManaging/repository"
+	
 )
 
-func (s *fiberServer) initProductRouter() {
-	// Initialize Router
-	router := s.app.Group("/products")
+func (s *fiberServer) initProductRouter(authorizingMiddleware *authorizingMiddleware) {
+	router := s.app.Group("/products", ErrorHandlerMiddleware(), authorizingMiddleware.MiddlewareFunc())
 
 	productManagingRepository := _productManagingRepository.NewProductManagingRepositoryImpl(s.db)
 	productRepository := _productRepository.NewProductRepositoryImpl(s.db)

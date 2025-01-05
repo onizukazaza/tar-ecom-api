@@ -1,9 +1,11 @@
 server:
   port: 8080
   allowOrigins:
-    - "*"
+    - http://localhost:3000
+    - http://example.com
   bodyLimit: 1048576  
   timeout: 30s # Seconds
+  jwt_secret_key: "my-secure-secret-key"
  
 
 database:
@@ -14,3 +16,4 @@ database:
   dbname: postgres
   sslmode: disable
   schema: public
+

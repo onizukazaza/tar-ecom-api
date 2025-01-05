@@ -3,14 +3,17 @@ package repository
 import (
     "github.com/onizukazaza/tar-ecom-api/entities"
 	"github.com/google/uuid"
+	"github.com/jmoiron/sqlx"
 )
 type ProductRepository interface {
-	CreateProduct(product *entities.Product, images []entities.ProductImage, variations []entities.ProductVariation) error
-	UpdateProduct(productID uuid.UUID, updates map[string]interface{}) error
-	
+	CreateProduct(tx *sqlx.Tx, product *entities.Product, images []entities.ProductImage, variations []entities.ProductVariation) error
+	// UpdateProduct(productID uuid.UUID, updates map[string]interface{}) error
+	EditProduct(productID uuid.UUID, updates map[string]interface{}, images []entities.ProductImage, variations []entities.ProductVariation) error 
 
-	UpdateProductImages(productID uuid.UUID, images []entities.ProductImage) error
-	UpdateProductVariations(productID uuid.UUID, variations []entities.ProductVariation) error
 	
-	DeleteProduct(productID uuid.UUID) error
+	DeleteProduct(tx *sqlx.Tx, productID uuid.UUID) error 
+	IsProductOwnedBySeller(productID uuid.UUID, sellerID string) (bool, error)
+
+	GetDB() *sqlx.DB
+	
 }

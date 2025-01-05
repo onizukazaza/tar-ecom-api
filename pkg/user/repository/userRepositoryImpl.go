@@ -74,3 +74,31 @@ func (r *userRepositoryImpl) EditUser(user *entities.User) error {
 	}
 	return nil
 }
+
+func (r *userRepositoryImpl) FindUserByEmail(email string) (*entities.User, error) {
+	query := "SELECT * FROM users WHERE email = $1"
+
+	var user entities.User
+	err := r.db.Get(&user, query, email)
+	if err != nil {
+		log.Errorf("Failed to find user by email: %v", err)
+		return nil, &_userlistexception.UserNotFound{}
+	}
+
+	return &user, nil
+}
+
+func (r *userRepositoryImpl) IsEmailExists(email string) (bool, error) {
+	var exists bool
+	query := `
+        SELECT EXISTS (
+            SELECT 1 FROM users WHERE email = $1
+        )
+    `
+	err := r.db.Get(&exists, query, email)
+	if err != nil {
+		log.Errorf("Failed to check email existence: %v", err)
+		return false, &_userlistexception.EmailCheck{}
+	}
+	return exists, nil
+}

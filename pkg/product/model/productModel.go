@@ -7,7 +7,6 @@ type ImageInfo struct {
 	IsPrimary bool   `json:"is_primary"`
 }
 
-
 type ColorInfo struct {
 	ID        string `json:"id"`
 	ColorType string `json:"color_type"`
@@ -21,7 +20,7 @@ type SizeInfo struct {
 type ProductCreatingReq struct {
 	ProductName      string                        `json:"product_name" validate:"required,max=64"`
 	Description      string                        `json:"description" validate:"required,max=128"`
-	SellerID         string                        `json:"seller_id" validate:"required,uuid4"`
+	SellerID         string                        `json:"seller_id"`
 	Gender           string                        `json:"gender" validate:"required,oneof=male female na"`
 	PrimaryImage     ImageInfo                     `json:"primary_image" validate:"required"`
 	AdditionalImages []ImageInfo                   `json:"additional_images,omitempty"`
@@ -40,6 +39,7 @@ type ProductVariationCreatingReq struct {
 
 type ProductEditingReq struct {
 	ID               string                        `json:"id" validate:"required,uuid4"`
+	SellerID         string                        `json:"seller_id"`
 	ProductName      string                        `json:"product_name" validate:"omitempty,max=64"`
 	Description      string                        `json:"description" validate:"omitempty,max=128"`
 	Gender           string                        `json:"gender" validate:"omitempty,oneof=male female na"`
@@ -52,7 +52,6 @@ type ProductImageUpdatingReq struct {
 	ImageURL  string `json:"image_url,omitempty"`
 	IsPrimary bool   `json:"is_primary"`
 }
-
 
 type ProductVariationUpdatingReq struct {
 	ID              string  `json:"id" validate:"required,uuid4"`

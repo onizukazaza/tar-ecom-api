@@ -11,19 +11,23 @@ import (
 	"sync"
 	"syscall"
 	"time"
-
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/jmoiron/sqlx"
 	"github.com/onizukazaza/tar-ecom-api/config"
+	_oauth2Controller "github.com/onizukazaza/tar-ecom-api/pkg/oauth2/controller"
+	_oauth2Service "github.com/onizukazaza/tar-ecom-api/pkg/oauth2/service"
+	_userRepository "github.com/onizukazaza/tar-ecom-api/pkg/user/repository"
 )
 
 type fiberServer struct {
 	app  *fiber.App
 	db   *sqlx.DB
 	conf *config.Config
+	secretKey  string
+
 }
 
 var (
@@ -32,6 +36,13 @@ var (
 )
 
 func NewFiberServer(conf *config.Config, db *sqlx.DB) *fiberServer {
+	// ดึง Secret Key จาก Config
+	secretKey := conf.Server.JWTSecretKey
+	if secretKey == "" {
+
+		log.Fatalf("[ERROR] JWT Secret Key is not set in config")
+	}
+
 	// Initialize Fiber application
 	fiberApp := fiber.New(fiber.Config{
 		BodyLimit: conf.Server.BodyLimit,
@@ -39,25 +50,30 @@ func NewFiberServer(conf *config.Config, db *sqlx.DB) *fiberServer {
 
 	once.Do(func() {
 		server = &fiberServer{
-			app:  fiberApp,
-			db:   db,
-			conf: conf,
+			app:       fiberApp,
+			db:        db,
+			conf:      conf,
+			secretKey: secretKey,
 		}
 	})
 
 	return server
 }
 
-// Start initializes middleware, routes, and starts the server
+
 func (s *fiberServer) Start() {
+	
+
 	s.initMiddlewares()
 	s.initRoutes()
-	// s.initAdminRouter()
+	
+
+	authorizingMiddleware := s.getAuthorizingMiddleware()
+
+	s.initAuthRouter()
 	s.initUserRouter()
 	s.initProductManagingRouter()
-	s.initProductRouter()
-	s.app.Use(getCORSMiddleware(s.conf.Server.AllowOrigins))
-	s.app.Use(getTimeoutMiddleware(s.conf.Server.Timeout))
+	s.initProductRouter(authorizingMiddleware)
 
 	// Graceful shutdown
 	quitCh := make(chan os.Signal, 1)
@@ -69,16 +85,21 @@ func (s *fiberServer) Start() {
 }
 
 func (s *fiberServer) initMiddlewares() {
+    customLogger := logger.New(logger.Config{
+        Format:     "[${time}] ${status} - ${method} ${path} - ${latency}\n",
+        TimeFormat: "2006-01-02 15:04:05",
+        TimeZone:   "Local",
+    })
 
-	customLogger := logger.New(logger.Config{
-		Format:     "[${time}] ${status} - ${method} ${path} - ${latency}\n",
-		TimeFormat: "2006-01-02 15:04:05",
-		TimeZone:   "Local",
-	})
+	s.app.Use(recover.New())           // Recover Middleware สำหรับดักจับ Panic
+    s.app.Use(customLogger)           // Logger Middleware
+    s.app.Use(ErrorHandlerMiddleware()) // Custom Error Handler
 
-	s.app.Use(recover.New())
+    // ใช้ CORS Middleware
+    s.app.Use(getCORSMiddleware(s.conf.Server.AllowOrigins))
 
-	s.app.Use(customLogger)
+    // ใช้ Timeout Middleware
+    s.app.Use(getTimeoutMiddleware(s.conf.Server.Timeout))
 }
 
 func (s *fiberServer) initRoutes() {
@@ -130,28 +151,51 @@ func (s *fiberServer) healthCheck(c *fiber.Ctx) error {
 func getTimeoutMiddleware(timeout time.Duration) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		ctx, cancel := context.WithTimeout(c.Context(), timeout)
-		defer cancel()
+		defer cancel() 
 
-		c.SetUserContext(ctx)
+		c.SetUserContext(ctx) 
 		done := make(chan error, 1)
+
 		go func() {
 			done <- c.Next()
 		}()
 
 		select {
-		case <-ctx.Done():
+		case <-ctx.Done(): 
 			return c.Status(http.StatusRequestTimeout).JSON(fiber.Map{
 				"error": "Request timed out",
 			})
-		case err := <-done:
+		case err := <-done: 
 			return err
 		}
 	}
 }
 
+
 func getCORSMiddleware(allowOrigins []string) fiber.Handler {
 	return cors.New(cors.Config{
-		AllowOrigins: strings.Join(allowOrigins, ","),
-		AllowMethods: "GET,POST,PUT,DELETE,OPTIONS",
+		AllowOrigins: strings.Join(allowOrigins, ","), 
+		AllowMethods: "GET,POST,PUT,DELETE,OPTIONS",   
+		AllowHeaders: "Content-Type, Authorization", 
+		ExposeHeaders: "Content-Length",           
+		AllowCredentials: true,                    
 	})
 }
+
+
+func (s *fiberServer) getAuthorizingMiddleware() *authorizingMiddleware {
+	userRepository := _userRepository.NewUserRepositoryImpl(s.db)
+	oauth2Service := _oauth2Service.NewOAuth2Service(
+		userRepository,
+		s.secretKey,
+	)
+
+	oauth2Controller := _oauth2Controller.NewOAuth2Controller(
+		oauth2Service, 
+		s.secretKey,
+	)
+	return &authorizingMiddleware{
+		OAuth2Controller: oauth2Controller,
+	}
+}
+

@@ -8,4 +8,5 @@ type UserService interface {
 	CreateUser(req *_userModel.CreateUserReq) (*_userModel.User, error)
 	FindUserByID(id string) (*_userModel.User, error)
 	EditUser(req *_userModel.EditUserReq) error 
+	IsUserExists(email string) (bool, error)
 }

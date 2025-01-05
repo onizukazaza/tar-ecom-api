@@ -10,14 +10,14 @@ import (
 
 func (s *fiberServer) initUserRouter() {
     // s.app.Use(logger.New())
-	router := s.app.Group("/v1/user")
+	router := s.app.Group("/v1/user", ErrorHandlerMiddleware())
 	userRepository := _userRepository.NewUserRepositoryImpl(s.db)
 	userService := _userService.NewUserServiceImpl(userRepository)
 	userController := _userController.NewUserControllerImpl(userService)
 
+	router.Post("", userController.CreateUser)
 	router.Get("", userController.Listing)
 	router.Get("/:id", userController.FindUserByID)
-	router.Post("", userController.CreateUser)
 	router.Patch("/:id", userController.EditUser)
 
 }

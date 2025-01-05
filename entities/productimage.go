@@ -12,7 +12,7 @@ type ProductImage struct {
 	ProductID   uuid.UUID      `db:"product_id"`
 	VariationID *uuid.UUID     `db:"variation_id"`
 	ImageURL    sql.NullString `db:"image_url"`
-	IsPrimary   sql.NullBool   `db:"is_primary"` // รองรับ NULL
+	IsPrimary   sql.NullBool   `db:"is_primary"` 
 	CreatedAt   time.Time      `db:"created_at"`
 	UpdatedAt   time.Time      `db:"updated_at"`
 }

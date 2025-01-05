@@ -36,18 +36,25 @@ func (s *userServiceImpl) Listing() ([]*_userModel.User, error) {
 }
 
 func (s *userServiceImpl) CreateUser(req *_userModel.CreateUserReq) (*_userModel.User, error) {
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
-	if err != nil {
-		return nil, fmt.Errorf("failed to hash password: %w", err)
-	}
+	exists, err := s.IsUserExists(req.Email)
+    if err != nil {
+        return nil, fmt.Errorf("failed to check user existence: %w", err)
+    }
+    if exists {
+        return nil, fmt.Errorf("email %s is already registered", req.Email)
+    }
 
+    hashedPassword, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
+    if err != nil {
+        return nil, fmt.Errorf("failed to hash password: %w", err)
+    }
 	user := &entities.User{
 		ID:           uuid.New(),
 		Username:     req.Username,
 		// Lastname:     req.Lastname,
 		Password:     string(hashedPassword),
 		Email:        req.Email,
-		Role:         entities.Role(req.Role),
+		Role:         entities.RoleBuyer,
 		ProfileImage: req.ProfileImage,
 		CreatedAt:    time.Now(),
 		UpdatedAt:    time.Now(),
@@ -93,4 +100,9 @@ func (s *userServiceImpl) EditUser(req *_userModel.EditUserReq) error {
 	}
 
 	return nil
+}
+
+
+func (s *userServiceImpl) IsUserExists(email string) (bool, error) {
+    return s.userRepository.IsEmailExists(email)
 }

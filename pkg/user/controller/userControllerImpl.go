@@ -28,20 +28,28 @@ func (c *userControllerImpl) Listing(ctx *fiber.Ctx) error {
 }
 
 func (c *userControllerImpl) CreateUser(ctx *fiber.Ctx) error {
-	//  Bind และ Validate Request Data
-	req := new(_userModel.CreateUserReq)
-	customReq := custom.NewCustomFiberRequest(ctx)
+    req := new(_userModel.CreateUserReq)
+    customReq := custom.NewCustomFiberRequest(ctx)
 
-	if err := customReq.Bind(req); err != nil {
-		return custom.CustomError(ctx, http.StatusBadRequest, err.Error())
-	}
+    if err := customReq.Bind(req); err != nil {
+        return custom.CustomError(ctx, http.StatusBadRequest, err.Error())
+    }
 
-	createdUser, err := c.userService.CreateUser(req)
-	if err != nil {
-		return custom.CustomError(ctx, http.StatusInternalServerError, err.Error())
-	}
+    // ตรวจสอบว่าผู้ใช้งานมีอยู่ในระบบแล้วหรือไม่
+    exists, err := c.userService.IsUserExists(req.Email)
+    if err != nil {
+        return custom.CustomError(ctx, http.StatusInternalServerError, err.Error())
+    }
+    if exists {
+        return custom.CustomError(ctx, http.StatusConflict, "User already exists")
+    }
 
-	return ctx.Status(http.StatusCreated).JSON(createdUser)
+    createdUser, err := c.userService.CreateUser(req)
+    if err != nil {
+        return custom.CustomError(ctx, http.StatusInternalServerError, err.Error())
+    }
+
+    return ctx.Status(fiber.StatusCreated).JSON(createdUser)
 }
 
 func (c *userControllerImpl) FindUserByID(ctx *fiber.Ctx) error {

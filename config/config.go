@@ -14,11 +14,13 @@ type (
 		Database *Database `mapstructure:"database" validate:"required"`
 	}
 
+
 	Server struct {
 		Port         int           `mapstructure:"port" validate:"required"`
 		AllowOrigins []string      `mapstructure:"allowOrigins" validate:"required"`
 		BodyLimit    int           `mapstructure:"bodylimit" validate:"required"`
 		Timeout      time.Duration `mapstructure:"timeout" validate:"required"`
+		JWTSecretKey string        `mapstructure:"jwt_secret_key" validate:"required"`
 	}
 
 	// OAuth2 struct {
@@ -33,6 +35,7 @@ type (
 		SSLMode  string `mapstructure:"sslmode" validate:"required"`
 		Schema   string `mapstructure:"schema" validate:"required"`
 	}
+
 )
 
 // start app set  1 load > "sync" callback function synchroton

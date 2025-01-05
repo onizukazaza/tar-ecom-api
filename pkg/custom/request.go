@@ -37,7 +37,7 @@ func NewCustomFiberRequest(fiberCtx *fiber.Ctx) FiberRequest {
 	}
 }
 
-// Bind binds and validates the incoming request data (Query Parameters, JSON Body, and Path Parameters)
+
 func (r *customFiberRequest) Bind(obj any) error {
 	// Parse Query Parameters
 	if err := r.ctx.QueryParser(obj); err != nil {

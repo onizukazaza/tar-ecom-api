@@ -20,7 +20,7 @@ type ProductVariation struct {
 	CreatedAt       time.Time `db:"created_at"`
 	UpdatedAt       time.Time `db:"updated_at"`
 
-	Images []string `db:"-"`
+	// Images []string `db:"-"`
 }
 
 func (pv *ProductVariation) ToModel(colorType string, sizeType string) _productManagingModel.ProductVariationInfo {

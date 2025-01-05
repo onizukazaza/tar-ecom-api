@@ -11,7 +11,7 @@ import (
 func (s *fiberServer) initProductManagingRouter() {
     // s.app.Use(logger.New())
 
-	router := s.app.Group("/items-product")
+	router := s.app.Group("/items-product", ErrorHandlerMiddleware())
 	productManagingRepository := _productManagingRepository.NewProductManagingRepositoryImpl(s.db)
 	productManagingService := _productManagingService.NewProductManagingServiceImpl(productManagingRepository)
 	productManagingController := _productManagingController.NewProductManagingControllerImpl(productManagingService)

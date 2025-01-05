@@ -93,123 +93,164 @@ func NewProductVariations(productID uuid.UUID, variationsReq []_productModel.Pro
 }
 
 func (s *productServiceImpl) CreateProduct(req *_productModel.ProductCreatingReq) error {
+	// เริ่มต้น Transaction
+	tx, err := s.productRepository.GetDB().Beginx()
+	if err != nil {
+		return fmt.Errorf("failed to start transaction: %w", err)
+	}
+
+	// เตรียมข้อมูล
 	product := NewProduct(req)
 	images := NewProductImages(product.ID, req)
 	variations := NewProductVariations(product.ID, req.Variations)
 
-	err := s.productRepository.CreateProduct(product, images, variations)
+	// ใช้ฟังก์ชัน Repository เดิมผ่าน Transaction
+	err = s.productRepository.CreateProduct(tx, product, images, variations)
 	if err != nil {
+		tx.Rollback()
 		return fmt.Errorf("failed to create product: %w", err)
 	}
 
+	// Commit Transaction
+	err = tx.Commit()
+	if err != nil {
+		return fmt.Errorf("failed to commit transaction: %w", err)
+	}
+
 	return nil
 }
-
-
 
 func (s *productServiceImpl) EditProduct(req *_productModel.ProductEditingReq) error {
-	productID, err := uuid.Parse(req.ID)
-	if err != nil {
-		return fmt.Errorf("invalid product ID: %w", err)
-	}
+    productID, err := uuid.Parse(req.ID)
+    if err != nil {
+        return fmt.Errorf("invalid product ID: %w", err)
+    }
 
-	// Fetch existing product
-	existingProduct, err := s.productManagingRepository.GetProductByID(productID)
-	if err != nil {
-		return err
-	}
+    // ตรวจสอบสิทธิ์การเป็นเจ้าของ
+    isOwned, err := s.productRepository.IsProductOwnedBySeller(productID, req.SellerID)
+    if err != nil {
+        return fmt.Errorf("error verifying product ownership: %w", err)
+    }
+    if !isOwned {
+        return fmt.Errorf("unauthorized: you do not own this product")
+    }
 
-	// Update product details
-	updates := map[string]interface{}{}
-	if req.ProductName != "" && req.ProductName != existingProduct.ProductName {
-		updates["product_name"] = req.ProductName
-	}
-	if req.Description != "" && req.Description != existingProduct.Description {
-		updates["description"] = req.Description
-	}
-	if req.Gender != "" && req.Gender != existingProduct.Gender {
-		updates["gender"] = req.Gender
-	}
-	updates["updated_at"] = time.Now()
+    // เตรียมข้อมูลสำหรับการอัปเดต
+    updates := map[string]interface{}{
+        "updated_at": time.Now(),
+    }
+    if req.ProductName != "" {
+        updates["product_name"] = req.ProductName
+    }
+    if req.Description != "" {
+        updates["description"] = req.Description
+    }
+    if req.Gender != "" {
+        updates["gender"] = req.Gender
+    }
 
-	err = s.productRepository.UpdateProduct(productID, updates)
-	if err != nil {
-		return fmt.Errorf("failed to update product: %w", err)
-	}
+    // เตรียมข้อมูลรูปภาพและ Variation
+    images := []entities.ProductImage{}
+    for _, img := range req.AdditionalImages {
+        images = append(images, entities.ProductImage{
+            ID:        uuid.MustParse(img.ID),
+            ProductID: productID,
+            ImageURL:  sql.NullString{String: img.ImageURL, Valid: img.ImageURL != ""},
+            IsPrimary: sql.NullBool{Bool: img.IsPrimary, Valid: true},
+            UpdatedAt: time.Now(),
+        })
+    }
 
-	// Update product images
-	if len(req.AdditionalImages) > 0 {
-		err := s.updateProductImages(productID, req.AdditionalImages)
-		if err != nil {
-			return err
-		}
-	}
+    variations := []entities.ProductVariation{}
+    for _, variation := range req.Variations {
+        variations = append(variations, entities.ProductVariation{
+            ID:              uuid.MustParse(variation.ID),
+            ProductID:       productID,
+            VariationPrice:  variation.VariationPrice,
+            Quantity:        variation.Quantity,
+            ImageVariations: variation.ImageVariations,
+            UpdatedAt:       time.Now(),
+        })
+    }
 
-	// Update product variations
-	if len(req.Variations) > 0 {
-		err := s.updateProductVariations(productID, req.Variations)
-		if err != nil {
-			return err
-		}
-	}
+    // เรียกฟังก์ชันใน Repository
+    err = s.productRepository.EditProduct(productID, updates, images, variations)
+    if err != nil {
+        return fmt.Errorf("failed to edit product: %w", err)
+    }
 
-	return nil
-}
-
-func (s *productServiceImpl) updateProductImages(productID uuid.UUID, images []_productModel.ProductImageUpdatingReq) error {
-	for _, image := range images {
-		err := s.productRepository.UpdateProductImages(productID, []entities.ProductImage{
-			{
-				ID:        uuid.MustParse(image.ID),
-				ProductID: productID,
-				ImageURL:  sql.NullString{String: image.ImageURL, Valid: image.ImageURL != ""},
-				IsPrimary: sql.NullBool{Bool: image.IsPrimary, Valid: true},
-				UpdatedAt: time.Now(),
-			},
-		})
-		if err != nil {
-			return fmt.Errorf("failed to update product images: %w", err)
-		}
-	}
-	return nil
-}
-
-func (s *productServiceImpl) updateProductVariations(productID uuid.UUID, variations []_productModel.ProductVariationUpdatingReq) error {
-	for _, variation := range variations {
-		// แปลงข้อมูลที่อนุญาตให้แก้ไข
-		updateData := entities.ProductVariation{
-			ID:              uuid.MustParse(variation.ID), 
-			ProductID:       productID,
-			VariationPrice:  variation.VariationPrice,
-			Quantity:        variation.Quantity,
-			ImageVariations: variation.ImageVariations,
-			UpdatedAt:       time.Now(),
-		}
-
-		// ส่งข้อมูลไปยัง Repository เพื่ออัปเดต
-		err := s.productRepository.UpdateProductVariations(productID, []entities.ProductVariation{updateData})
-		if err != nil {
-			return fmt.Errorf("failed to update product variations: %w", err)
-		}
-	}
-	return nil
+    return nil
 }
 
 func (s *productServiceImpl) DeleteProduct(productID string) error {
-	// ตรวจสอบว่า productID เป็น UUID ที่ถูกต้อง
-	id, err := uuid.Parse(productID)
-	if err != nil {
-		return fmt.Errorf("invalid product ID: %w", err)
-	}
+    // ตรวจสอบว่า productID เป็น UUID ที่ถูกต้อง
+    id, err := uuid.Parse(productID)
+    if err != nil {
+        return fmt.Errorf("invalid product ID: %w", err)
+    }
 
-	// เรียก Repository เพื่อลบสินค้า
-	err = s.productRepository.DeleteProduct(id)
-	if err != nil {
-		if err.Error() == "product not found" {
-			return fmt.Errorf("product not found")
-		}
-		return fmt.Errorf("failed to delete product: %w", err)
-	}
+    // เริ่มต้น Transaction
+    tx, err := s.productRepository.GetDB().Beginx()
+    if err != nil {
+        return fmt.Errorf("failed to start transaction: %w", err)
+    }
 
-	return nil
+    // เรียก Repository เพื่อลบสินค้า
+    err = s.productRepository.DeleteProduct(tx, id) // ส่ง tx เป็นอาร์กิวเมนต์แรก
+    if err != nil {
+        tx.Rollback() // Rollback เมื่อเกิดข้อผิดพลาด
+        if err.Error() == "product not found" {
+            return fmt.Errorf("product not found")
+        }
+        return fmt.Errorf("failed to delete product: %w", err)
+    }
+
+    // Commit Transaction
+    err = tx.Commit()
+    if err != nil {
+        return fmt.Errorf("failed to commit transaction: %w", err)
+    }
+
+    return nil
+}
+
+
+func (s *productServiceImpl) DeleteProductWithSeller(productID string, sellerID string) error {
+    // ตรวจสอบและแปลง ID
+    id, err := uuid.Parse(productID)
+    if err != nil {
+        return fmt.Errorf("invalid product ID: %w", err)
+    }
+
+    // เริ่มต้น Transaction
+    tx, err := s.productRepository.GetDB().Beginx()
+    if err != nil {
+        return fmt.Errorf("failed to start transaction: %w", err)
+    }
+
+    // ตรวจสอบสิทธิ์การเป็นเจ้าของ
+    isOwned, err := s.productRepository.IsProductOwnedBySeller(id, sellerID)
+    if err != nil {
+        tx.Rollback()
+        return fmt.Errorf("error verifying product ownership: %w", err)
+    }
+    if !isOwned {
+        tx.Rollback()
+        return fmt.Errorf("unauthorized: you do not own this product")
+    }
+
+    // ลบสินค้า
+    err = s.productRepository.DeleteProduct(tx, id) // เพิ่ม `tx` เป็นอาร์กิวเมนต์แรก
+    if err != nil {
+        tx.Rollback()
+        return fmt.Errorf("failed to delete product: %w", err)
+    }
+
+    // Commit Transaction
+    err = tx.Commit()
+    if err != nil {
+        return fmt.Errorf("failed to commit transaction: %w", err)
+    }
+
+    return nil
 }

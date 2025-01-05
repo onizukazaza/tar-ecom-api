@@ -161,7 +161,7 @@ func (r *productManagingRepositoryImpl) GetProductByID(productID uuid.UUID) (*_p
 
 
 func (r *productManagingRepositoryImpl) Listing(filter *_productManagingModel.FilterRequest) ([]*_productManagingModel.ProductDetail, error) {
-	baseQuery := `
+    baseQuery := `
     SELECT 
         p.id AS product_id, p.product_name, p.description, p.seller_id, p.gender,
         p.created_at, p.updated_at,
@@ -182,37 +182,37 @@ func (r *productManagingRepositoryImpl) Listing(filter *_productManagingModel.Fi
     WHERE 1=1
     `
 
-	// Apply Filter
-	if filter.Gender != "" {
-		baseQuery += " AND p.gender = :gender"
-	}
+    // Apply Filter if Provided
+    if filter.Gender != "" {
+        baseQuery += " AND p.gender = :gender"
+    }
 
-	rows, err := r.db.NamedQuery(baseQuery, filter)
-	if err != nil {
-		return nil, fmt.Errorf("error executing query: %w", err)
-	}
-	defer rows.Close()
+    rows, err := r.db.NamedQuery(baseQuery, filter)
+    if err != nil {
+        return nil, fmt.Errorf("error executing query: %w", err)
+    }
+    defer rows.Close()
 
-	// Process rows
-	productMap := make(map[uuid.UUID]*_productManagingModel.ProductDetail)
-	imageMap := make(map[string]struct{})
-	variationMap := make(map[string]struct{})
+    productMap := make(map[uuid.UUID]*_productManagingModel.ProductDetail)
+    imageMap := make(map[string]struct{})
+    variationMap := make(map[string]struct{})
 
-	for rows.Next() {
-		product, image, variation, color, size, err := r.scanProductRow(rows)
-		if err != nil {
-			return nil, fmt.Errorf("error scanning row: %w", err)
-		}
+    for rows.Next() {
+        product, image, variation, color, size, err := r.scanProductRow(rows)
+        if err != nil {
+            return nil, fmt.Errorf("error scanning row: %w", err)
+        }
 
-		r.processProductMaps(productMap, imageMap, variationMap, product, image, variation, color, size)
-	}
+        r.processProductMaps(productMap, imageMap, variationMap, product, image, variation, color, size)
+    }
 
-	result := make([]*_productManagingModel.ProductDetail, 0, len(productMap))
-	for _, product := range productMap {
-		result = append(result, product)
-	}
+    result := make([]*_productManagingModel.ProductDetail, 0, len(productMap))
+    for _, product := range productMap {
+        result = append(result, product)
+    }
 
-	return result, nil
+    return result, nil
 }
+
 
 
