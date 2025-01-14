@@ -1,7 +1,6 @@
 package server
 
 import (
-	// "github.com/gofiber/fiber/v2/middleware/logger"
 
 	_userRepository "github.com/onizukazaza/tar-ecom-api/pkg/user/repository"
 	_userService "github.com/onizukazaza/tar-ecom-api/pkg/user/service"

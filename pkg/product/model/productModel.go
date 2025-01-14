@@ -20,7 +20,7 @@ type SizeInfo struct {
 type ProductCreatingReq struct {
 	ProductName      string                        `json:"product_name" validate:"required,max=64"`
 	Description      string                        `json:"description" validate:"required,max=128"`
-	SellerID         string                        `json:"seller_id"`
+	SellerID         string                        `json:"seller_id,omitempty" validate:"omitempty,uuid4"`
 	Gender           string                        `json:"gender" validate:"required,oneof=male female na"`
 	PrimaryImage     ImageInfo                     `json:"primary_image" validate:"required"`
 	AdditionalImages []ImageInfo                   `json:"additional_images,omitempty"`
