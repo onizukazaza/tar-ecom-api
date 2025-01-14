@@ -18,7 +18,7 @@ func NewAddressControllerImpl(service _addressService.AddressService) AddressCon
 }
 
 func (c *addressControllerImpl) CreateAddress(ctx *fiber.Ctx) error {
-    // ดึง Buyer ID จาก Token
+
     buyerID, err := validation.BuyerIDGetting(ctx)
     if err != nil {
         return custom.CustomError(ctx, fiber.StatusUnauthorized, err.Error())
@@ -31,7 +31,6 @@ func (c *addressControllerImpl) CreateAddress(ctx *fiber.Ctx) error {
         return custom.CustomError(ctx, fiber.StatusBadRequest, err.Error())
     }
 
-    // ใช้ Buyer ID ที่ดึงจาก Token
     req.UserID = buyerID
 
     createdAddress, err := c.addressService.CreateAddress(req)

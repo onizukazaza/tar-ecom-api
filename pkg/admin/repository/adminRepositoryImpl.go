@@ -22,18 +22,18 @@ func (r *adminRepositoryImpl) UpdateUserRole(userID string, role string) error {
     `
 	result, err := r.db.Exec(query, role, userID)
 	if err != nil {
-		// กรณีที่ SQL Error
+		// SQL Error
 		return fmt.Errorf("UpdateUserRole: failed to execute query: %w", err)
 	}
 
 	rowsAffected, err := result.RowsAffected()
 	if err != nil {
-		// ไม่สามารถตรวจสอบ Rows Affected ได้
+	
 		return fmt.Errorf("UpdateUserRole: failed to retrieve rows affected: %w", err)
 	}
 
 	if rowsAffected == 0 {
-		// ไม่มีการอัปเดตใด ๆ (User ไม่พบหรือ Role ไม่เปลี่ยนแปลง)
+
 		return &_AdminException.UnChangeRole{
 			UserID: userID,
 			Role:   role,

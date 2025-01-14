@@ -85,7 +85,7 @@ func (c *productControllerImpl) DeleteProduct(ctx *fiber.Ctx) error {
 }
 
 func (c *productControllerImpl) Listing(ctx *fiber.Ctx) error {
-	// ดึง sellerID จาก Context
+
 	sellerID, err := validation.SellerIDGetting(ctx)
 	if err != nil {
 		return custom.CustomError(ctx, http.StatusUnauthorized, err.Error())
@@ -100,7 +100,7 @@ func (c *productControllerImpl) Listing(ctx *fiber.Ctx) error {
 		}
 	}
 
-	// ส่ง sellerID พร้อม filter ไปยัง Service Layer
+	
 	products, err := c.productService.Listing(filter, sellerID)
 	if err != nil {
 		return custom.CustomError(ctx, fiber.StatusInternalServerError, "Failed to fetch product list: "+err.Error())

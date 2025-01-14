@@ -94,18 +94,16 @@ func NewProductVariations(productID uuid.UUID, variationsReq []_productModel.Pro
 }
 
 func (s *productServiceImpl) CreateProduct(req *_productModel.ProductCreatingReq) error {
-	// เริ่มต้น Transaction
+
 	tx, err := s.productRepository.GetDB().Beginx()
 	if err != nil {
 		return fmt.Errorf("failed to start transaction: %w", err)
 	}
 
-	// เตรียมข้อมูล
 	product := NewProduct(req)
 	images := NewProductImages(product.ID, req)
 	variations := NewProductVariations(product.ID, req.Variations)
 
-	// ใช้ฟังก์ชัน Repository เดิมผ่าน Transaction
 	err = s.productRepository.CreateProduct(tx, product, images, variations)
 	if err != nil {
 		tx.Rollback()
@@ -136,7 +134,7 @@ func (s *productServiceImpl) EditProduct(req *_productModel.ProductEditingReq) e
 		return fmt.Errorf("unauthorized: you do not own this product")
 	}
 
-	// เตรียมข้อมูลสำหรับการอัปเดต
+
 	updates := map[string]interface{}{
 		"updated_at": time.Now(),
 	}
@@ -150,7 +148,7 @@ func (s *productServiceImpl) EditProduct(req *_productModel.ProductEditingReq) e
 		updates["gender"] = req.Gender
 	}
 
-	// เตรียมข้อมูลรูปภาพและ Variation
+
 	images := []entities.ProductImage{}
 	for _, img := range req.AdditionalImages {
 		images = append(images, entities.ProductImage{
@@ -194,7 +192,7 @@ func (s *productServiceImpl) DeleteProduct(productID string) error {
 		return fmt.Errorf("failed to start transaction: %w", err)
 	}
 
-	// เปลี่ยนเป็น ArchiveProduct แทนการลบ
+	//  ArchiveProduct 
 	err = s.productRepository.ArchiveProduct(tx, id)
 	if err != nil {
 		tx.Rollback()
@@ -219,7 +217,7 @@ func (s *productServiceImpl) DeleteProductWithSeller(productID string, sellerID 
 	if err != nil {
 		return fmt.Errorf("failed to start transaction: %w", err)
 	}
-
+	// ตรวจสอบสิทธิ์การเป็นเจ้าของ
 	isOwned, err := s.productRepository.IsProductOwnedBySeller(id, sellerID)
 	if err != nil {
 		tx.Rollback()
@@ -244,8 +242,6 @@ func (s *productServiceImpl) DeleteProductWithSeller(productID string, sellerID 
 
 	return nil
 }
-
-//GetProductsBySeller implements for seller
 
 func (s *productServiceImpl) Listing(filter *_productManagingModel.FilterRequestBySeller, sellerID string) ([]*_productManagingModel.ProductDetail, error) {
     products, err := s.productManagingRepository.Listing(

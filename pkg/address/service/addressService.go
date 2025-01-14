@@ -12,6 +12,3 @@ type AddressService interface {
 
 }
 
-// EditAddress(req *model.EditAddressReq) error
-
-// FindAddressByID(id string) (*model.Address, error)

@@ -65,14 +65,14 @@ func (c *userControllerImpl) FindUserByID(ctx *fiber.Ctx) error {
 }
 
 func (c *userControllerImpl) EditUser(ctx *fiber.Ctx) error {
-    // Validate Buyer
+
     buyerID, err := validation.BuyerIDGetting(ctx)
     if err != nil {
         return custom.CustomError(ctx, fiber.StatusUnauthorized, err.Error())
     }
 
     req := new(_userModel.EditUserReq)
-    req.ID = buyerID // ใช้ BuyerID ที่ผ่านการ Validate
+    req.ID = buyerID 
 
     customReq := custom.NewCustomFiberRequest(ctx)
     if err := customReq.Bind(req); err != nil {

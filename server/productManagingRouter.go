@@ -10,12 +10,13 @@ func (s *fiberServer) initProductManagingRouter() {
 
     router := s.app.Group("/items-product", ErrorHandlerMiddleware())
 	
+	// Dependency Injection
 	productManagingRepository := _productManagingRepository.NewProductManagingRepositoryImpl(s.db)
 	productManagingService := _productManagingService.NewProductManagingServiceImpl(productManagingRepository)
 	productManagingController := _productManagingController.NewProductManagingControllerImpl(productManagingService)
 
 	
-	//feature for buyer list
+	// Endpoint feature for buyer list
 	router.Get("/:id", productManagingController.GetProductByID)
-	router.Get("/all/buyer", productManagingController.ListActiveProducts)  // user testing
+	router.Get("/all/buyer", productManagingController.ListActiveProducts) 
 }

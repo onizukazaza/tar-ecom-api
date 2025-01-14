@@ -12,6 +12,7 @@ func (s *fiberServer) initUserRouter(authorizingMiddleware *authorizingMiddlewar
 
     router := s.app.Group("/v1/user", ErrorHandlerMiddleware())
 
+    // Dependency Injection
     userRepository := _userRepository.NewUserRepositoryImpl(s.db)
     userService := _userService.NewUserServiceImpl(userRepository)
     userController := _userController.NewUserControllerImpl(userService)

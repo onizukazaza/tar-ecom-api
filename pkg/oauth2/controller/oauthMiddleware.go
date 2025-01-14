@@ -21,7 +21,7 @@ func JWTMiddleware(secretKey string) fiber.Handler {
 			return []byte(secretKey), nil
 		})
 		if err != nil {
-			// ตรวจสอบว่าข้อผิดพลาดเกี่ยวกับ Token หมดอายุหรือไม่
+			// check Token หมดอายุหรือไม่
 			if errors.Is(err, jwt.ErrTokenExpired) {
 				return ctx.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "token expired"})
 			}
@@ -32,7 +32,6 @@ func JWTMiddleware(secretKey string) fiber.Handler {
 			return &_OauthException.Unauthorized{}
 		}
 
-		// บันทึก Claims ลงใน Context
 		ctx.Locals("userID", claims["id"])
 		ctx.Locals("role", claims["role"])
 		return ctx.Next()
@@ -78,7 +77,6 @@ func (c *oauth2ControllerImpl) UserAuthorizing(ctx *fiber.Ctx) error {
 		return ctx.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "invalid or expired token"})
 	}
 
-	// Save claims to context
 	ctx.Locals("userID", claims["id"])
 	ctx.Locals("role", claims["role"])
 	return ctx.Next()

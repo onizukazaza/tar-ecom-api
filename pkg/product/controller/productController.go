@@ -9,6 +9,5 @@ type ProductController interface {
 	Listing(ctx *fiber.Ctx) error
 	FindProductByID(ctx *fiber.Ctx) error
 	//owned product all (filter : true , false)
-	//owned product byid (filter : true , false)
 
 }

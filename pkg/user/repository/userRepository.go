@@ -11,7 +11,7 @@ type UserRepository interface {
 	EditUser(user *entities.User) error
 	FindUserByEmail(email string) (*entities.User, error)
 	IsEmailExists(email string) (bool, error)
-	//DeleteUserByID
+
 }
 
 

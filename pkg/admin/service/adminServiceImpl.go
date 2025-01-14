@@ -21,15 +21,10 @@ func NewAdminServiceImpl(adminRepository _adminRepository.AdminRepository, userR
 }
 
 func (s *adminServiceImpl) SetRole(req *_adminModel.SetRoleReq) error {
-	// ตรวจสอบว่าผู้ใช้มีอยู่จริง
 	_ , err := s.userRepository.FindUserByID(req.ID)
 	if err != nil {
 		return err
 	}
-
-	// if user.Role == req.Role {
-	// 	return fmt.Errorf("SetRole: no changes to role")
-	// }
 
 	err = s.adminRepository.UpdateUserRole(req.ID, req.Role)
 	if err != nil {

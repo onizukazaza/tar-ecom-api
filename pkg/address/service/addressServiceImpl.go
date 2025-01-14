@@ -83,20 +83,20 @@ func (s *addressServiceImpl) FindAddressByID(id string, userID string) (*_addres
 }
 
 func (s *addressServiceImpl) UpdateFavoriteAddress(id string, userID string, favorite bool) error {
-    // ตรวจสอบว่าที่อยู่เป็นของผู้ใช้งาน
+
     address, err := s.addressRepository.FindAddressByID(id, userID)
     if err != nil || address == nil {
         return fmt.Errorf("address not found or not owned by user")
     }
 
     if favorite {
-        // หากกำหนดให้ Favorite เป็น True, ต้องปิด Favorite อื่นทั้งหมดก่อน
+
         if err := s.addressRepository.ClearAllFavorites(userID); err != nil {
             return fmt.Errorf("failed to clear existing favorites: %w", err)
         }
     }
 
-    // อัปเดตสถานะ Favorite
+
     if err := s.addressRepository.UpdateFavoriteAddress(id, userID, favorite); err != nil {
         return fmt.Errorf("failed to update favorite address: %w", err)
     }
@@ -104,13 +104,12 @@ func (s *addressServiceImpl) UpdateFavoriteAddress(id string, userID string, fav
     return nil
 }
 func (s *addressServiceImpl) DeleteAddress(id string, userID string) error {
-    // ตรวจสอบว่าที่อยู่เป็นของผู้ใช้งาน
+
     address, err := s.addressRepository.FindAddressByID(id, userID)
     if err != nil || address == nil {
         return fmt.Errorf("address not found or not owned by user")
     }
 
-    // ลบที่อยู่
     if err := s.addressRepository.DeleteAddress(id, userID); err != nil {
         return fmt.Errorf("failed to delete address: %w", err)
     }
