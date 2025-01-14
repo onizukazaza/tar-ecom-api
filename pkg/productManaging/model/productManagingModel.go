@@ -24,7 +24,6 @@ type (
 		VariationPrice  float64 `json:"variation_price"`
 		Quantity        int     `json:"quantity"`
 		ImageVariations string  `json:"image_variations"`
-		// Images          []ImageInfo `json:"images"`
 	}
 
 	ImageInfo struct {
@@ -42,30 +41,30 @@ type (
 		SizeType string `json:"size_type"`
 	}
 
-	Paginate struct {
-		Page      int64  `query:"page" validate:"required,min=1"`
-        Size       int64  `query:"size" validate:"required,min=1,max=20"`
-	}	
-    ItemResult struct {
-		ProductDetail []*ProductDetail `json:"-"`
-		Paginate PaginateResult `json:"paginate"`
-	}
+	// Paginate struct {
+	// 	Page      int64  `query:"page" validate:"required,min=1"`
+    //     Size       int64  `query:"size" validate:"required,min=1,max=20"`
+	// }	
+    // ItemResult struct {
+	// 	ProductDetail []*ProductDetail `json:"product_detail"`
+	// 	Paginate PaginateResult `json:"paginate"`
+	// }
 
-	PaginateResult struct {
-		Page       int64 `json:"page"`
-        TotalPage int64 `json:"totalpage"`
-    }
+	// PaginateResult struct {
+	// 	Page       int64 `json:"page"`
+    //     TotalPage int64 `json:"totalpage"`
+    // }
 
 )
 
 type FilterRequest struct {
     Gender string `query:"gender" validate:"omitempty,oneof=male female"`
-	Paginate
+	// Paginate
 }
 
 type FilterRequestBySeller struct {
     Gender    string `query:"gender" validate:"omitempty,oneof=male female"`
     IsArchive *bool  `query:"is_archive" validate:"omitempty"`
-	Paginate
+	// Paginate
 }
 

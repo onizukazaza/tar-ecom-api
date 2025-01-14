@@ -17,7 +17,7 @@ func (s *fiberServer) initUserRouter(authorizingMiddleware *authorizingMiddlewar
     userService := _userService.NewUserServiceImpl(userRepository)
     userController := _userController.NewUserControllerImpl(userService)
 
-    
+    // Endpoint 
     router.Post("", userController.CreateUser) 
     router.Get("", authorizingMiddleware.MiddlewareFunc(), userController.Listing)    // use global middleware role
     router.Get("/:id", authorizingMiddleware.MiddlewareFunc(), userController.FindUserByID) // use global middleware role 
