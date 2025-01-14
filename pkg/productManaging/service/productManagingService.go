@@ -5,7 +5,7 @@ import (
 )
 
 type ProductManagingService interface {
-	// Listing() ([]*_productManagingModel.ProductDetail, error)
-	 Listing(filter *_productManagingModel.FilterRequest) ([]*_productManagingModel.ProductDetail, error) 
-	ViewProductByID(productID string) (*_productManagingModel.ProductDetail, error) // เพิ่มฟังก์ชันใหม่
+	GetProductByID(productID string) (*_productManagingModel.ProductDetail, error) 
+	ListActiveProducts(filter *_productManagingModel.FilterRequest) ([]*_productManagingModel.ProductDetail, error)
+	
 }

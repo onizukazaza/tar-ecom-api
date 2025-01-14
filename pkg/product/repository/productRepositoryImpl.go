@@ -6,6 +6,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 	"github.com/onizukazaza/tar-ecom-api/entities"
+    _ProductException "github.com/onizukazaza/tar-ecom-api/pkg/product/exception"
 )
 
 type productRepositoryImpl struct {
@@ -13,15 +14,16 @@ type productRepositoryImpl struct {
 }
 
 func NewProductRepositoryImpl(db *sqlx.DB) *productRepositoryImpl {
-	return &productRepositoryImpl{db: db}
+	return &productRepositoryImpl{
+        db: db ,
+    }
 }
 
 func (r *productRepositoryImpl) GetDB() *sqlx.DB {
 	return r.db
 }
 
-// เพิ่มฟังก์ชันใหม่สำหรับการทำงานผ่าน Transaction
-func (r *productRepositoryImpl) CreateProduct(tx *sqlx.Tx, product *entities.Product, images []entities.ProductImage, variations []entities.ProductVariation) error {
+func (r *productRepositoryImpl) CreateProduct(tx *sqlx.Tx, product *entities.Product, images []entities.ProductImage, variations []entities.ProductVariation ) error  {
 	_, err := tx.NamedExec(`
 		INSERT INTO products (id, product_name, description, seller_id, gender, created_at, updated_at, is_archive)
 		VALUES (:id, :product_name, :description, :seller_id, :gender, :created_at, :updated_at, :is_archive)`, product)
@@ -42,9 +44,9 @@ func (r *productRepositoryImpl) CreateProduct(tx *sqlx.Tx, product *entities.Pro
 		_, err := tx.NamedExec(`
 			INSERT INTO product_variation (id, product_id, color_id, size_id, variation_price, quantity, image_variation, created_at, updated_at)
 			VALUES (:id, :product_id, :color_id, :size_id, :variation_price, :quantity, :image_variation, :created_at, :updated_at)`, variation)
-		if err != nil {
-			return fmt.Errorf("failed to insert product variation: %w", err)
-		}
+            if err != nil {
+                return &_ProductException.UnCreateProduct{}
+            }
 	}
 
 	return nil
@@ -72,7 +74,7 @@ func (r *productRepositoryImpl) EditProduct(productID uuid.UUID, updates map[str
     _, err = tx.Exec(query, args...)
     if err != nil {
         tx.Rollback()
-        return fmt.Errorf("failed to update product: %w", err)
+        return &_ProductException.FailedToUpdateProduct{}
     }
 
     // อัปเดตรูปภาพสินค้า
@@ -86,7 +88,7 @@ func (r *productRepositoryImpl) EditProduct(productID uuid.UUID, updates map[str
         _, err := tx.NamedExec(query, img)
         if err != nil {
             tx.Rollback()
-            return fmt.Errorf("failed to update product image ID %s: %w", img.ID.String(), err)
+            return &_ProductException.FailedToUpdateProductImage{ImageID: img.ID.String()}
         }
     }
 
@@ -102,7 +104,7 @@ func (r *productRepositoryImpl) EditProduct(productID uuid.UUID, updates map[str
         _, err := tx.NamedExec(query, variation)
         if err != nil {
             tx.Rollback()
-            return fmt.Errorf("failed to update product variation ID %s: %w", variation.ID.String(), err)
+            return &_ProductException.FailedToUpdateProductVariation{VariationID: variation.ID.String()}
         }
     }
 
@@ -115,28 +117,19 @@ func (r *productRepositoryImpl) EditProduct(productID uuid.UUID, updates map[str
     return nil
 }
 
-
-func (r *productRepositoryImpl) DeleteProduct(tx *sqlx.Tx, productID uuid.UUID) error {
-    queryImages := `DELETE FROM product_image WHERE product_id = $1`
-    _, err := tx.Exec(queryImages, productID)
+func (r *productRepositoryImpl) ArchiveProduct(tx *sqlx.Tx, productID uuid.UUID) error {
+    query := `
+        UPDATE products
+        SET is_archive = true, updated_at = NOW()
+        WHERE id = $1
+    `
+    _, err := tx.Exec(query, productID)
     if err != nil {
-        return fmt.Errorf("failed to delete product images: %w", err)
+        return &_ProductException.UnArchive{}
     }
-
-    queryVariations := `DELETE FROM product_variation WHERE product_id = $1`
-    _, err = tx.Exec(queryVariations, productID)
-    if err != nil {
-        return fmt.Errorf("failed to delete product variations: %w", err)
-    }
-
-    queryProduct := `DELETE FROM products WHERE id = $1`
-    _, err = tx.Exec(queryProduct, productID)
-    if err != nil {
-        return fmt.Errorf("failed to delete product: %w", err)
-    }
-
     return nil
 }
+
 
 
 func (r *productRepositoryImpl) IsProductOwnedBySeller(productID uuid.UUID, sellerID string) (bool, error) {
@@ -154,3 +147,5 @@ func (r *productRepositoryImpl) IsProductOwnedBySeller(productID uuid.UUID, sell
     }
     return exists, nil
 }
+
+

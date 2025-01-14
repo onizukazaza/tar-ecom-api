@@ -28,7 +28,7 @@ type User struct {
 	UpdatedAt    time.Time `db:"updated_at"`
 }
 
-func (u *User) ToUserModel() *_userModel.User {
+func (u *User) ToModel() *_userModel.User {
     return &_userModel.User{
         ID:           u.ID.String(),
         Username:     u.Username,

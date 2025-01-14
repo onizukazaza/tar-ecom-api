@@ -29,7 +29,7 @@ func (s *userServiceImpl) Listing() ([]*_userModel.User, error) {
 
 	adminModelList := make([]*_userModel.User, 0)
 	for _, user := range userList {
-		adminModelList = append(adminModelList, user.ToUserModel())
+		adminModelList = append(adminModelList, user.ToModel())
 	}
 
 	return adminModelList, nil
@@ -64,7 +64,7 @@ func (s *userServiceImpl) CreateUser(req *_userModel.CreateUserReq) (*_userModel
 		return nil, fmt.Errorf("failed to create user: %w", err)
 	}
 
-	return user.ToUserModel(), nil
+	return user.ToModel(), nil
 }
 
 func (s *userServiceImpl) FindUserByID(id string) (*_userModel.User, error) {
@@ -72,35 +72,33 @@ func (s *userServiceImpl) FindUserByID(id string) (*_userModel.User, error) {
 	if err != nil {
 		return nil, err
 	}
-	return user.ToUserModel(), nil
+	return user.ToModel(), nil
 }
 
 func (s *userServiceImpl) EditUser(req *_userModel.EditUserReq) error {
-	user, err := s.userRepository.FindUserByID(req.ID)
-	if err != nil {
-		return err
-	}
+    user, err := s.userRepository.FindUserByID(req.ID)
+    if err != nil {
+        return err
+    }
 
-	if req.Username != "" {
-		user.Username = req.Username
-	}
-	if req.Email != "" {
-		user.Email = req.Email
-	}
-	if req.Role != "" {
-		user.Role = entities.Role(req.Role)
-	}
-	if req.ProfileImage != "" {
-		user.ProfileImage = req.ProfileImage
-	}
-	user.UpdatedAt = time.Now()
+    if req.Username != "" {
+        user.Username = req.Username
+    }
+    if req.Email != "" {
+        user.Email = req.Email
+    }
+    if req.ProfileImage != "" {
+        user.ProfileImage = req.ProfileImage
+    }
+    user.UpdatedAt = time.Now()
 
-	if err := s.userRepository.EditUser(user); err != nil {
-		return fmt.Errorf("failed to update user: %w", err)
-	}
+    if err := s.userRepository.EditUser(user); err != nil {
+        return fmt.Errorf("failed to update user: %w", err)
+    }
 
-	return nil
+    return nil
 }
+
 
 
 func (s *userServiceImpl) IsUserExists(email string) (bool, error) {

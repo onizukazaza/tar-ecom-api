@@ -5,8 +5,8 @@ import (
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 	"github.com/onizukazaza/tar-ecom-api/entities"
-	_productManagingModel "github.com/onizukazaza/tar-ecom-api/pkg/productManaging/model"
 	_productManagingException "github.com/onizukazaza/tar-ecom-api/pkg/productManaging/exception"
+	_productManagingModel "github.com/onizukazaza/tar-ecom-api/pkg/productManaging/model"
 )
 
 type productManagingRepositoryImpl struct {
@@ -33,6 +33,7 @@ func (r *productManagingRepositoryImpl) scanProductRow(rows *sqlx.Rows) (*entiti
 		&product.Description,
 		&product.SellerID,
 		&product.Gender,
+		&product.IsArchive,
 		&product.CreatedAt,
 		&product.UpdatedAt,
 		&image.ID,
@@ -53,9 +54,13 @@ func (r *productManagingRepositoryImpl) scanProductRow(rows *sqlx.Rows) (*entiti
 	if err != nil {
 		return nil, nil, nil, nil, nil, fmt.Errorf("error scanning row: %w", err)
 	}
-	return &product, &image, &variation, &color, &size, nil
+	return &product,
+		&image,
+		&variation,
+		&color,
+		&size,
+		nil
 }
-
 
 func (r *productManagingRepositoryImpl) processImage(
 	product *_productManagingModel.ProductDetail,
@@ -73,7 +78,6 @@ func (r *productManagingRepositoryImpl) processImage(
 	}
 }
 
-
 func (r *productManagingRepositoryImpl) processVariation(
 	product *_productManagingModel.ProductDetail,
 	variation *entities.ProductVariation,
@@ -85,12 +89,17 @@ func (r *productManagingRepositoryImpl) processVariation(
 		variationKey := fmt.Sprintf("%s-%s", variation.ID.String(), variation.ImageVariations)
 		if _, exists := variationMap[variationKey]; !exists {
 			variationMap[variationKey] = struct{}{}
-			variationModel := variation.ToModel(color.ColorType, size.SizeType)
-			product.Variations = append(product.Variations, variationModel)
+			variationModel := variation.ToModel(
+				color.ColorType,
+				size.SizeType,
+			)
+			product.Variations = append(
+				product.Variations,
+				variationModel,
+			)
 		}
 	}
 }
-
 
 func (r *productManagingRepositoryImpl) processProductMaps(
 	productMap map[uuid.UUID]*_productManagingModel.ProductDetail,
@@ -107,13 +116,19 @@ func (r *productManagingRepositoryImpl) processProductMaps(
 	}
 
 	r.processImage(productMap[product.ID], image, imageMap)
-	r.processVariation(productMap[product.ID], variation, color, size, variationMap)
+	r.processVariation(productMap[product.ID],
+		variation,
+		color,
+		size,
+		variationMap,
+	)
 }
 
 func (r *productManagingRepositoryImpl) GetProductByID(productID uuid.UUID) (*_productManagingModel.ProductDetail, error) {
 	query := `
     SELECT 
         p.id AS product_id, p.product_name, p.description, p.seller_id, p.gender,
+		p.is_archive,
         p.created_at, p.updated_at,
         pi.id AS image_id, pi.image_url, pi.is_primary,
         pv.id AS variation_id, pv.color_id, pv.size_id, pv.variation_price, pv.quantity, pv.image_variation,
@@ -144,50 +159,136 @@ func (r *productManagingRepositoryImpl) GetProductByID(productID uuid.UUID) (*_p
 	variationMap := make(map[string]struct{})
 
 	for rows.Next() {
-		product, image, variation, color, size, err := r.scanProductRow(rows)
+		product,
+			image,
+			variation,
+			color,
+			size, err := r.scanProductRow(rows)
 		if err != nil {
 			return nil, fmt.Errorf("error scanning row: %w", err)
 		}
 
-		r.processProductMaps(productMap, imageMap, variationMap, product, image, variation, color, size)
+		r.processProductMaps(
+			productMap,
+			imageMap,
+			variationMap,
+			product,
+			image,
+			variation,
+			color,
+			size,
+		)
 	}
 
 	if productDetail, exists := productMap[productID]; exists {
 		return productDetail, nil
 	}
 
-	return nil, &_productManagingException.ProductNotFoundError{}
+	return nil, &_productManagingException.ProductNotFound{}
+}
+
+func (r *productManagingRepositoryImpl) GetProductByIDAndSeller(productID uuid.UUID, sellerID string) (*_productManagingModel.ProductDetail, error) {
+	query := `
+        SELECT 
+            p.id AS product_id, p.product_name, p.description, p.seller_id, p.gender,
+			p.is_archive,
+            p.created_at, p.updated_at,
+            pi.id AS image_id, pi.image_url, pi.is_primary,
+            pv.id AS variation_id, pv.color_id, pv.size_id, pv.variation_price, pv.quantity, pv.image_variation,
+            c.id AS color_id, c.color_type,
+            s.id AS size_id, s.size_type
+        FROM 
+            products p
+        LEFT JOIN 
+            product_image pi ON pi.product_id = p.id
+        LEFT JOIN 
+            product_variation pv ON pv.product_id = p.id
+        LEFT JOIN 
+            color c ON pv.color_id = c.id
+        LEFT JOIN 
+            size s ON pv.size_id = s.id
+        WHERE 
+            p.id = $1 AND p.seller_id = $2;
+    `
+
+	rows, err := r.db.Queryx(query, productID, sellerID)
+	if err != nil {
+		return nil, fmt.Errorf("error executing query: %w", err)
+	}
+	defer rows.Close()
+
+	productMap := make(map[uuid.UUID]*_productManagingModel.ProductDetail)
+	imageMap := make(map[string]struct{})
+	variationMap := make(map[string]struct{})
+
+	for rows.Next() {
+		product, image, variation, color, size, err := r.scanProductRow(rows)
+		if err != nil {
+			return nil, fmt.Errorf("error scanning row: %w", err)
+		}
+
+		r.processProductMaps(
+			productMap,
+			imageMap,
+			variationMap,
+			product,
+			image,
+			variation,
+			color,
+			size,
+		)
+	}
+
+	if productDetail, exists := productMap[productID]; exists {
+		return productDetail, nil
+	}
+
+	return nil, &_productManagingException.ProductNotFound{}
 }
 
 
-func (r *productManagingRepositoryImpl) Listing(filter *_productManagingModel.FilterRequest) ([]*_productManagingModel.ProductDetail, error) {
+
+func (r *productManagingRepositoryImpl) Listing(filter *_productManagingModel.FilterRequestBySeller, sellerID string) ([]*_productManagingModel.ProductDetail, error) {
     baseQuery := `
-    SELECT 
-        p.id AS product_id, p.product_name, p.description, p.seller_id, p.gender,
-        p.created_at, p.updated_at,
-        pi.id AS image_id, pi.image_url, pi.is_primary,
-        pv.id AS variation_id, pv.color_id, pv.size_id, pv.variation_price, pv.quantity, pv.image_variation,
-        c.id AS color_id, c.color_type,
-        s.id AS size_id, s.size_type
-    FROM 
-        products p
-    LEFT JOIN 
-        product_image pi ON pi.product_id = p.id
-    LEFT JOIN 
-        product_variation pv ON pv.product_id = p.id
-    LEFT JOIN 
-        color c ON pv.color_id = c.id
-    LEFT JOIN 
-        size s ON pv.size_id = s.id
-    WHERE 1=1
+        SELECT 
+            p.id AS product_id, p.product_name, p.description, p.seller_id, p.gender,
+            p.is_archive, p.created_at, p.updated_at,
+            pi.id AS image_id, pi.image_url, pi.is_primary,
+            pv.id AS variation_id, pv.color_id, pv.size_id, pv.variation_price, pv.quantity, pv.image_variation,
+            c.id AS color_id, c.color_type,
+            s.id AS size_id, s.size_type
+        FROM 
+            products p
+        LEFT JOIN 
+            product_image pi ON pi.product_id = p.id
+        LEFT JOIN 
+            product_variation pv ON pv.product_id = p.id
+        LEFT JOIN 
+            color c ON pv.color_id = c.id
+        LEFT JOIN 
+            size s ON pv.size_id = s.id
+        WHERE 
+            p.seller_id = :seller_id
     `
 
-    // Apply Filter if Provided
-    if filter.Gender != "" {
-        baseQuery += " AND p.gender = :gender"
+
+    params := map[string]interface{}{
+        "seller_id": sellerID,
     }
 
-    rows, err := r.db.NamedQuery(baseQuery, filter)
+
+    if filter.Gender != "" {
+        baseQuery += " AND p.gender = :gender"
+        params["gender"] = filter.Gender
+    }
+
+
+    if filter.IsArchive != nil {
+        baseQuery += " AND p.is_archive = :is_archive"
+        params["is_archive"] = *filter.IsArchive
+    }
+
+    rows, err := r.db.NamedQuery(baseQuery, params)
     if err != nil {
         return nil, fmt.Errorf("error executing query: %w", err)
     }
@@ -203,7 +304,16 @@ func (r *productManagingRepositoryImpl) Listing(filter *_productManagingModel.Fi
             return nil, fmt.Errorf("error scanning row: %w", err)
         }
 
-        r.processProductMaps(productMap, imageMap, variationMap, product, image, variation, color, size)
+        r.processProductMaps(
+            productMap,
+            imageMap,
+            variationMap,
+            product,
+            image,
+            variation,
+            color,
+            size,
+        )
     }
 
     result := make([]*_productManagingModel.ProductDetail, 0, len(productMap))
@@ -214,5 +324,76 @@ func (r *productManagingRepositoryImpl) Listing(filter *_productManagingModel.Fi
     return result, nil
 }
 
+
+
+func (r *productManagingRepositoryImpl) ListActiveProducts(filter *_productManagingModel.FilterRequest) ([]*_productManagingModel.ProductDetail, error) {
+	query := `
+    SELECT 
+        p.id AS product_id, p.product_name, p.description, p.seller_id, p.gender,
+		p.is_archive,
+        p.created_at, p.updated_at,
+        pi.id AS image_id, pi.image_url, pi.is_primary,
+        pv.id AS variation_id, pv.color_id, pv.size_id, pv.variation_price, pv.quantity, pv.image_variation,
+        c.id AS color_id, c.color_type,
+        s.id AS size_id, s.size_type
+    FROM 
+        products p
+    LEFT JOIN 
+        product_image pi ON pi.product_id = p.id
+    LEFT JOIN 
+        product_variation pv ON pv.product_id = p.id
+    LEFT JOIN 
+        color c ON pv.color_id = c.id
+    LEFT JOIN 
+        size s ON pv.size_id = s.id
+    WHERE 
+        p.is_archive = false 
+    `
+
+
+	if filter.Gender != "" {
+		query += " AND p.gender = :gender"
+	}
+
+
+	rows, err := r.db.NamedQuery(query, filter)
+	if err != nil {
+		return nil, fmt.Errorf("error executing query: %w", err)
+	}
+	defer rows.Close()
+
+	productMap := make(map[uuid.UUID]*_productManagingModel.ProductDetail)
+	imageMap := make(map[string]struct{})
+	variationMap := make(map[string]struct{})
+
+	for rows.Next() {
+		product,
+			image,
+			variation,
+			color,
+			size, err := r.scanProductRow(rows)
+		if err != nil {
+			return nil, fmt.Errorf("error scanning row: %w", err)
+		}
+
+		r.processProductMaps(
+			productMap,
+			imageMap,
+			variationMap,
+			product,
+			image,
+			variation,
+			color,
+			size,
+		)
+	}
+
+	result := make([]*_productManagingModel.ProductDetail, 0, len(productMap))
+	for _, product := range productMap {
+		result = append(result, product)
+	}
+
+	return result, nil
+}
 
 

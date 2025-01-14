@@ -8,16 +8,18 @@ import (
 	_userController "github.com/onizukazaza/tar-ecom-api/pkg/user/controller"
 )
 
-func (s *fiberServer) initUserRouter() {
-    // s.app.Use(logger.New())
-	router := s.app.Group("/v1/user", ErrorHandlerMiddleware())
-	userRepository := _userRepository.NewUserRepositoryImpl(s.db)
-	userService := _userService.NewUserServiceImpl(userRepository)
-	userController := _userController.NewUserControllerImpl(userService)
+func (s *fiberServer) initUserRouter(authorizingMiddleware *authorizingMiddleware) {
 
-	router.Post("", userController.CreateUser)
-	router.Get("", userController.Listing)
-	router.Get("/:id", userController.FindUserByID)
-	router.Patch("/:id", userController.EditUser)
+    router := s.app.Group("/v1/user", ErrorHandlerMiddleware())
 
+    userRepository := _userRepository.NewUserRepositoryImpl(s.db)
+    userService := _userService.NewUserServiceImpl(userRepository)
+    userController := _userController.NewUserControllerImpl(userService)
+
+    
+    router.Post("", userController.CreateUser) 
+    router.Get("", authorizingMiddleware.MiddlewareFunc(), userController.Listing)    // use global middleware role
+    router.Get("/:id", authorizingMiddleware.MiddlewareFunc(), userController.FindUserByID) // use global middleware role 
+    router.Patch("/edit", authorizingMiddleware.MiddlewareFunc(), userController.EditUser)  // use global middleware role 
 }
+

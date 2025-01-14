@@ -4,8 +4,8 @@ import (
 	"github.com/jmoiron/sqlx"
 	"github.com/gofiber/fiber/v2/log"
 	"github.com/onizukazaza/tar-ecom-api/entities"
-	_userlistexception "github.com/onizukazaza/tar-ecom-api/pkg/user/exception"
-	"fmt"
+	_UserException "github.com/onizukazaza/tar-ecom-api/pkg/user/exception"
+
 )
 
 type userRepositoryImpl struct {
@@ -26,7 +26,7 @@ func (r *userRepositoryImpl) Listing() ([]*entities.User, error) {
 	err := r.db.Select(&userList, query)
 	if err != nil {
 		log.Errorf("Failed to list users: %v", err)
-		return nil, &_userlistexception.UserListing{}
+		return nil, &_UserException.UserListing{}
 	}
 
 	return userList, nil
@@ -40,8 +40,10 @@ func (r *userRepositoryImpl) CreateUser(user *entities.User) error {
 	_, err := r.db.NamedExec(query, user)
 	if err != nil {
 		log.Errorf("Failed to create user: %v", err)
-		return fmt.Errorf("failed to create user: %w", err)
+
+		return &_UserException.UnCreateUser{}
 	}
+
 	return nil
 }
 
@@ -52,28 +54,43 @@ func (r *userRepositoryImpl) FindUserByID(id string) (*entities.User, error) {
 	err := r.db.Get(&user, query, id)
 	if err != nil {
 		log.Errorf("Failed to find user by ID: %v", err)
-		return nil, &_userlistexception.UserNotFound{}
+		return nil, &_UserException.UserNotFound{}
 	}
 	return &user, nil
 }
 
 func (r *userRepositoryImpl) EditUser(user *entities.User) error {
-	query := `
+    query := `
         UPDATE users 
         SET username = :username, 
             email = :email, 
-            role = :role, 
             profile_image = :profile_image, 
             updated_at = :updated_at 
         WHERE id = :id
     `
-	_, err := r.db.NamedExec(query, user)
-	if err != nil {
-		log.Errorf("Failed to update user: %v", err)
-		return fmt.Errorf("failed to update user: %w", err)
-	}
-	return nil
+
+    result, err := r.db.NamedExec(query, user)
+    if err != nil {
+        log.Errorf("Failed to update user: %v", err)
+        return &_UserException.UserEditing{}
+    }
+
+    rowsAffected, err := result.RowsAffected()
+    if err != nil {
+        log.Errorf("Failed to retrieve rows affected: %v", err)
+        return &_UserException.UserEditing{}
+    }
+
+    if rowsAffected == 0 {
+        return &_UserException.UserEditing{
+            UserID: user.ID.String(),
+        }
+    }
+
+    return nil
 }
+
+
 
 func (r *userRepositoryImpl) FindUserByEmail(email string) (*entities.User, error) {
 	query := "SELECT * FROM users WHERE email = $1"
@@ -82,7 +99,7 @@ func (r *userRepositoryImpl) FindUserByEmail(email string) (*entities.User, erro
 	err := r.db.Get(&user, query, email)
 	if err != nil {
 		log.Errorf("Failed to find user by email: %v", err)
-		return nil, &_userlistexception.UserNotFound{}
+		return nil, &_UserException.UserNotFound{}
 	}
 
 	return &user, nil
@@ -98,7 +115,7 @@ func (r *userRepositoryImpl) IsEmailExists(email string) (bool, error) {
 	err := r.db.Get(&exists, query, email)
 	if err != nil {
 		log.Errorf("Failed to check email existence: %v", err)
-		return false, &_userlistexception.EmailCheck{}
+		return false, &_UserException.EmailCheck{}
 	}
 	return exists, nil
 }

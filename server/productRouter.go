@@ -9,8 +9,9 @@ import (
 )
 
 func (s *fiberServer) initProductRouter(authorizingMiddleware *authorizingMiddleware) {
-	router := s.app.Group("/products", ErrorHandlerMiddleware(), authorizingMiddleware.MiddlewareFunc())
+	router := s.app.Group("/product-managing", ErrorHandlerMiddleware(), authorizingMiddleware.MiddlewareFunc())
 
+	// Dependency Injection
 	productManagingRepository := _productManagingRepository.NewProductManagingRepositoryImpl(s.db)
 	productRepository := _productRepository.NewProductRepositoryImpl(s.db)
 	productService := _productService.NewProductServiceImpl(
@@ -19,7 +20,12 @@ func (s *fiberServer) initProductRouter(authorizingMiddleware *authorizingMiddle
 	)
 	productController := _productController.NewProductController(productService)
 
+	
+	//  Endpoint get product with owner
 	router.Post("", productController.CreateProduct)
-	router.Patch("/:id", productController.EditProduct)
-	router.Delete("/:id", productController.DeleteProduct)
+
+	router.Get("/all", productController.Listing)  //for owner product management is feature
+	router.Get("/seller-id/:id", productController.FindProductByID) //for owner product management is feature
+	router.Patch("/:id", productController.EditProduct) //for owner product management is feature
+	router.Delete("/:id", productController.DeleteProduct) //for owner product management is feature
 }

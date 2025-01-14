@@ -18,18 +18,7 @@ func NewProductManagingServiceImpl(productManagingRepository _productManagingRep
 	}
 }
 
-
-func (s *productManagingServiceImpl) Listing(filter *_productManagingModel.FilterRequest) ([]*_productManagingModel.ProductDetail, error) {
-
-    products, err := s.productManagingRepository.Listing(filter)
-    if err != nil {
-        return nil, err
-    }
-
-    return products, nil
-}
-
-func (s *productManagingServiceImpl) ViewProductByID(productID string) (*_productManagingModel.ProductDetail, error) {
+func (s *productManagingServiceImpl) GetProductByID(productID string) (*_productManagingModel.ProductDetail, error) {
 	uuidProductID, err := uuid.Parse(productID)
 	if err != nil {
 		return nil, fmt.Errorf("invalid product ID format: %w", err)
@@ -42,3 +31,14 @@ func (s *productManagingServiceImpl) ViewProductByID(productID string) (*_produc
 
 	return product, nil
 }
+
+
+func (s *productManagingServiceImpl) ListActiveProducts(filter *_productManagingModel.FilterRequest) ([]*_productManagingModel.ProductDetail, error) {
+    products, err := s.productManagingRepository.ListActiveProducts(filter)
+    if err != nil {
+        return nil, err
+    }
+
+    return products, nil
+}
+

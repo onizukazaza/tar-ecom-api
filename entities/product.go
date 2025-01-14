@@ -5,6 +5,7 @@ import (
 
 	"github.com/google/uuid"
 	_productManagingModel "github.com/onizukazaza/tar-ecom-api/pkg/productManaging/model"
+	
 )
 
 
@@ -36,7 +37,7 @@ func (p *Product) ToModel(primaryImage _productManagingModel.ImageInfo, addition
 		Description:      p.Description,
 		SellerID:         p.SellerID.String(),
 		Gender:           string(p.Gender), 
-		IsArchive:        p.IsArchive,
+		IsArchive:        p.IsArchive, 
 		PrimaryImage:     primaryImage,
 		AdditionalImages: additionalImages,
 		Variations:       variations,
@@ -44,3 +45,4 @@ func (p *Product) ToModel(primaryImage _productManagingModel.ImageInfo, addition
 		UpdatedAt:        p.UpdatedAt,
 	}
 }
+

@@ -11,7 +11,7 @@ type authorizingMiddleware struct {
 
 func (m *authorizingMiddleware) MiddlewareFunc() fiber.Handler {
     return func(ctx *fiber.Ctx) error {
-        // เรียกใช้ฟังก์ชันตรวจสอบสิทธิ์จาก Controller
+
         return m.OAuth2Controller.UserAuthorizing(ctx)
     }
 }

@@ -7,13 +7,22 @@ import (
 	
 )
 
-func (s *fiberServer) initAuthRouter() {
+func (s *fiberServer) initAuthRouter(authorizingMiddleware *authorizingMiddleware) {
+	
 	router := s.app.Group("/v1/auth", ErrorHandlerMiddleware())
 
+	// Dependency Injection
 	userRepository := _userRepository.NewUserRepositoryImpl(s.db)
-	oauthService := _oauthService.NewOAuth2Service(userRepository, s.secretKey)
-	oauthController := _oauthController.NewOAuth2Controller(oauthService, s.secretKey)
+	oauthService := _oauthService.NewOAuth2Service(
+		userRepository, 
+		s.secretKey,
+	)
+	oauthController := _oauthController.NewOAuth2Controller(
+		oauthService,
+		s.secretKey,
+		)
 
+    //  Endpoint
 	router.Post("/login", oauthController.Login)
-	router.Post("/logout", oauthController.Logout)
+	router.Post("/logout",authorizingMiddleware.MiddlewareFunc(), oauthController.Logout)
 }

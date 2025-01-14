@@ -6,6 +6,7 @@ import (
 	_userModel "github.com/onizukazaza/tar-ecom-api/pkg/user/model"
 	_userService "github.com/onizukazaza/tar-ecom-api/pkg/user/service"
 	"net/http"
+	"github.com/onizukazaza/tar-ecom-api/pkg/validation"
 )
 
 type userControllerImpl struct {
@@ -64,19 +65,24 @@ func (c *userControllerImpl) FindUserByID(ctx *fiber.Ctx) error {
 }
 
 func (c *userControllerImpl) EditUser(ctx *fiber.Ctx) error {
-	id := ctx.Params("id")
-	req := new(_userModel.EditUserReq)
-	req.ID = id
+    // Validate Buyer
+    buyerID, err := validation.BuyerIDGetting(ctx)
+    if err != nil {
+        return custom.CustomError(ctx, fiber.StatusUnauthorized, err.Error())
+    }
 
-	customReq := custom.NewCustomFiberRequest(ctx)
-	if err := customReq.Bind(req); err != nil {
-		return custom.CustomError(ctx, http.StatusBadRequest, err.Error())
-	}
+    req := new(_userModel.EditUserReq)
+    req.ID = buyerID // ใช้ BuyerID ที่ผ่านการ Validate
 
-	err := c.userService.EditUser(req)
-	if err != nil {
-		return custom.CustomError(ctx, http.StatusInternalServerError, err.Error())
-	}
+    customReq := custom.NewCustomFiberRequest(ctx)
+    if err := customReq.Bind(req); err != nil {
+        return custom.CustomError(ctx, fiber.StatusBadRequest, err.Error())
+    }
 
-	return ctx.Status(http.StatusOK).JSON(fiber.Map{"message": "User updated successfully"})
+    err = c.userService.EditUser(req)
+    if err != nil {
+        return custom.CustomError(ctx, fiber.StatusInternalServerError, err.Error())
+    }
+
+    return ctx.Status(fiber.StatusOK).JSON(fiber.Map{"message": "User updated successfully"})
 }

@@ -1,9 +1,10 @@
 package service 
 
 import (
-    _adminModel "github.com/onizukazaza/tar-ecom-api/pkg/user/model"
+       _adminModel "github.com/onizukazaza/tar-ecom-api/pkg/admin/model"
 )
 
 type AdminService interface {
-	Listing() ([] *_adminModel.User, error)
+	SetRole(req *_adminModel.SetRoleReq) error
+	
 }

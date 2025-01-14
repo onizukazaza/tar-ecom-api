@@ -4,7 +4,8 @@ import (
 	"fmt"
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v5"
-    "errors"
+    _OauthException "github.com/onizukazaza/tar-ecom-api/pkg/oauth2/exception"
+	"errors"
 )
 
 // JWT Middleware for token validation
@@ -12,7 +13,7 @@ func JWTMiddleware(secretKey string) fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
 		tokenString, err := ExtractTokenFromHeader(ctx)
 		if err != nil {
-			return ctx.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": err.Error()})
+			return &_OauthException.Unauthorized{}
 		}
 
 		claims := jwt.MapClaims{}
@@ -24,11 +25,11 @@ func JWTMiddleware(secretKey string) fiber.Handler {
 			if errors.Is(err, jwt.ErrTokenExpired) {
 				return ctx.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "token expired"})
 			}
-			return ctx.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "invalid token"})
+			return &_OauthException.Unauthorized{}
 		}
 
 		if !token.Valid {
-			return ctx.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "invalid token"})
+			return &_OauthException.Unauthorized{}
 		}
 
 		// บันทึก Claims ลงใน Context

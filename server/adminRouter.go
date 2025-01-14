@@ -1,18 +1,26 @@
 package server
 
-// import (
-// 	// "github.com/gofiber/fiber/v2/middleware/logger"
+import (
+	_adminRepository "github.com/onizukazaza/tar-ecom-api/pkg/admin/repository"
+	_adminService "github.com/onizukazaza/tar-ecom-api/pkg/admin/service"
+	_adminController "github.com/onizukazaza/tar-ecom-api/pkg/admin/controller"
+	_userRepository "github.com/onizukazaza/tar-ecom-api/pkg/user/repository"
+)
 
-// 	_adminRepository "github.com/onizukazaza/tar-ecom-api/pkg/admin/repository"
-// 	_adminService "github.com/onizukazaza/tar-ecom-api/pkg/admin/service"
-// 	_adminController "github.com/onizukazaza/tar-ecom-api/pkg/admin/controller"
-// )
+func (s *fiberServer) initAdminRouter(authorizingMiddleware *authorizingMiddleware) {
 
-// func (s *fiberServer) initAdminRouter() {
-//     // s.app.Use(logger.New())
-// 	router := s.app.Group("/v1/admin")
-// 	adminRepository := _adminRepository.NewAdminRepositoryImpl(s.db)
-// 	adminService := _adminService.NewAdminServiceImpl(adminRepository)
-// 	adminController := _adminController.NewAdminControllerImpl(adminService)
-// 	router.Get("", adminController.Listing)
-// }
+	router := s.app.Group("/v1/admin", ErrorHandlerMiddleware() , authorizingMiddleware.MiddlewareFunc())
+
+	// Dependency Injection
+	userRepository := _userRepository.NewUserRepositoryImpl(s.db)
+	adminRepository := _adminRepository.NewAdminRepositoryImpl(s.db)
+	adminService := _adminService.NewAdminServiceImpl(
+		adminRepository,
+		userRepository,
+	)
+	adminController := _adminController.NewAdminControllerImpl(adminService)
+
+	//  Endpoint
+	router.Post("/user/:id/set-role", adminController.SetRole)
+
+}

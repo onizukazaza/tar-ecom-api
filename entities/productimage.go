@@ -11,8 +11,8 @@ type ProductImage struct {
 	ID          uuid.UUID      `db:"id"`
 	ProductID   uuid.UUID      `db:"product_id"`
 	VariationID *uuid.UUID     `db:"variation_id"`
-	ImageURL    sql.NullString `db:"image_url"`
-	IsPrimary   sql.NullBool   `db:"is_primary"` 
+	ImageURL    sql.NullString `db:"image_url"` //Image URL
+	IsPrimary   sql.NullBool   `db:"is_primary"` //TRUE or FALSE
 	CreatedAt   time.Time      `db:"created_at"`
 	UpdatedAt   time.Time      `db:"updated_at"`
 }

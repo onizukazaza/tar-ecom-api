@@ -1,7 +1,7 @@
 package exception
 
-type ProductNotFoundError struct{}
+type ProductNotFound struct{}
 
-func (e *ProductNotFoundError) Error() string {
+func (e *ProductNotFound) Error() string {
 	return "Product was not found"
 }

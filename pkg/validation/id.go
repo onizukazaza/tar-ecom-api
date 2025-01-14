@@ -33,3 +33,17 @@ func BuyerIDGetting(ctx *fiber.Ctx) (string, error) {
 
     return buyerID, nil
 }
+
+func AdminIDGetting(ctx *fiber.Ctx) (string, error) {
+    adminID, ok := ctx.Locals("userID").(string)
+    if !ok || adminID == "" {
+        return "", fiber.NewError(http.StatusUnauthorized, "Unauthorized access: adminID is missing or invalid")
+    }
+
+    role, ok := ctx.Locals("role").(string)
+    if !ok || entities.Role(role) != entities.RoleAdmin {
+        return "", fiber.NewError(http.StatusForbidden, "Access restricted to admins only")
+    }
+
+    return adminID, nil
+}

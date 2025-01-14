@@ -42,8 +42,30 @@ type (
 		SizeType string `json:"size_type"`
 	}
 
+	Paginate struct {
+		Page      int64  `query:"page" validate:"required,min=1"`
+        Size       int64  `query:"size" validate:"required,min=1,max=20"`
+	}	
+    ItemResult struct {
+		ProductDetail []*ProductDetail `json:"-"`
+		Paginate PaginateResult `json:"paginate"`
+	}
+
+	PaginateResult struct {
+		Page       int64 `json:"page"`
+        TotalPage int64 `json:"totalpage"`
+    }
+
 )
 
 type FilterRequest struct {
     Gender string `query:"gender" validate:"omitempty,oneof=male female"`
+	Paginate
 }
+
+type FilterRequestBySeller struct {
+    Gender    string `query:"gender" validate:"omitempty,oneof=male female"`
+    IsArchive *bool  `query:"is_archive" validate:"omitempty"`
+	Paginate
+}
+
