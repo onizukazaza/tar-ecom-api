@@ -1,10 +1,12 @@
 server:
   port: 8080
   allowOrigins:
-    - http://localhost:3000
-    - http://example.com
+    # - "*"  //for development
+    - "https://example.com"
+    - "https://api.example.com"
+
   bodyLimit: 1048576
-  timeout: 5s # Seconds
+  timeout: 30s # Seconds
   jwt_secret_key: "my-secure-secret-key"
  
 
