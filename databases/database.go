@@ -6,4 +6,5 @@ import (
 
 type Database interface {
 	Connect() *sqlx.DB
+	
 }
