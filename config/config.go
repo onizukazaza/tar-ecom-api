@@ -48,7 +48,7 @@ func ConfigGetting() *Config { //undo function
 	once.Do(func() {
 		viper.SetConfigName("config")
 		viper.SetConfigType("yaml")
-		viper.AddConfigPath("./bin") // ./config -> ./bin 
+		viper.AddConfigPath("./") // ./ -> ./bin (deploy)
 		viper.AutomaticEnv()
 		viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_")) // . -> _
 

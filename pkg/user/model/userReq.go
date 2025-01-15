@@ -10,6 +10,6 @@ type CreateUserReq struct {
 type EditUserReq struct {
 	ID           string `json:"id" validate:"required"` 
 	Username     string `json:"username" validate:"max=50"` 
-	Email        string `json:"email" validate:"omitempty,email,max=100"` 
+	Email        string `json:"email" validate:"omitempty,email,max=50"` 
 	ProfileImage string `json:"profile_image" validate:"max=255"`
 }

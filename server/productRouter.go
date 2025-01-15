@@ -23,7 +23,6 @@ func (s *fiberServer) initProductRouter(authorizingMiddleware *authorizingMiddle
 	
 	//  Endpoint get product with owner
 	router.Post("", productController.CreateProduct)
-
 	router.Get("/all", productController.Listing)  //for owner product management is feature
 	router.Get("/seller-id/:id", productController.FindProductByID) //for owner product management is feature
 	router.Patch("/:id", productController.EditProduct) //for owner product management is feature
