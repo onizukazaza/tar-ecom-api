@@ -1,36 +1,44 @@
 package repository
 
 import (
-	"log"
-
 	"github.com/jmoiron/sqlx"
-	"github.com/onizukazaza/tar-ecom-api/entities"
+	_AdminException "github.com/onizukazaza/tar-ecom-api/pkg/admin/exception"
+	"fmt"
 )
 
 type adminRepositoryImpl struct {
-	db     *sqlx.DB
-	logger *log.Logger
+	db *sqlx.DB
 }
 
-
-func NewAdminRepositoryImpl(db *sqlx.DB, logger *log.Logger) AdminRepository {
-	return &adminRepositoryImpl{
-		db:     db,
-		logger: logger,
-	}
+func NewAdminRepositoryImpl(db *sqlx.DB) AdminRepository {
+	return &adminRepositoryImpl{db: db}
 }
 
-
-func (r *adminRepositoryImpl) Listing() ([]*entities.User, error) {
-	userList := make([]*entities.User, 0)
-
-	query := "SELECT * FROM users"
-
-	err := r.db.Select(&userList, query)
+func (r *adminRepositoryImpl) UpdateUserRole(userID string, role string) error {
+	query := `
+        UPDATE users 
+        SET role = $1 
+        WHERE id = $2
+    `
+	result, err := r.db.Exec(query, role, userID)
 	if err != nil {
-		r.logger.Printf("Failed to list users: %v", err)
-		return nil, err
+		// SQL Error
+		return fmt.Errorf("UpdateUserRole: failed to execute query: %w", err)
 	}
 
-	return userList, nil
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+	
+		return fmt.Errorf("UpdateUserRole: failed to retrieve rows affected: %w", err)
+	}
+
+	if rowsAffected == 0 {
+
+		return &_AdminException.UnChangeRole{
+			UserID: userID,
+			Role:   role,
+		}
+	}
+
+	return nil
 }

@@ -1,0 +1,1474 @@
+{
+	"info": {
+		"_postman_id": "cdb3dd99-9c17-4f34-a850-cb9c71cc9794",
+		"name": "tar-ecom",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23209645"
+	},
+	"item": [
+		{
+			"name": "oauth",
+			"item": [
+				{
+					"name": "user",
+					"item": [
+						{
+							"name": "all-user",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MzY1ODMyOTMsImlkIjoiM2QxMzBlMjUtYTk0My00Yzg4LWI0OTgtYjM5NTgyZTI3MzU3Iiwicm9sZSI6ImJ1eWVyIn0.HJRAy7zyq5S5DSgKFUxEKUZGu0sFzXHHrM69Wa-yQ8o",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseurl}}/v1/user",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"v1",
+										"user"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "add-user",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\t\"username\": \"seler\",\r\n\t// \"lastname\": \"Doe\",\r\n\t\"password\": \"orihdsd123\",\r\n\t\"email\": \"e.dd@nija.com\",\r\n\t\"profile_image\": \"profile4.jpg\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseurl}}/v1/user",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"v1",
+										"user"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "200-ok (seller-1)",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n\t\"username\": \"poonyapath\",\r\n\t// \"lastname\": \"Doe\",\r\n\t\"password\": \"ajaxzaza123\",\r\n\t\"email\": \"guitar.ff@nija.com\",\r\n\t\"profile_image\": \"profile1.jpg\"\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseurl}}/v1/user",
+											"host": [
+												"{{baseurl}}"
+											],
+											"path": [
+												"v1",
+												"user"
+											]
+										}
+									},
+									"status": "Created",
+									"code": 201,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Sat, 04 Jan 2025 17:28:34 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Content-Length",
+											"value": "218"
+										},
+										{
+											"key": "Vary",
+											"value": "Origin"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": \"14a20beb-2a4b-45d3-b004-14f6ea3e12fb\",\n    \"username\": \"poonyapath\",\n    \"password\": \"$2a$10$dPTmrPuD7BL34gwyvzvgNubn51xHsAyZG9sUY2bhBYEoyHNmdq4Uy\",\n    \"email\": \"guitar.ff@nija.com\",\n    \"role\": \"buyer\",\n    \"profile_image\": \"profile1.jpg\"\n}"
+								},
+								{
+									"name": "200-ok (seller-2)",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n\t\"username\": \"junji\",\r\n\t// \"lastname\": \"Doe\",\r\n\t\"password\": \"alisazaza123\",\r\n\t\"email\": \"junji.ff@nija.com\",\r\n\t\"profile_image\": \"profile1.jpg\"\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseurl}}/v1/user",
+											"host": [
+												"{{baseurl}}"
+											],
+											"path": [
+												"v1",
+												"user"
+											]
+										}
+									},
+									"status": "Created",
+									"code": 201,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Tue, 07 Jan 2025 02:39:50 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Content-Length",
+											"value": "212"
+										},
+										{
+											"key": "Vary",
+											"value": "Origin"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": \"06389e0f-cdbd-41df-9de2-fe8f4a2619d0\",\n    \"username\": \"junji\",\n    \"password\": \"$2a$10$B6dZ4fULQC3/nazuivAJyuxXxgvAnMlC/fJU25woSTa9BBLRV4fsS\",\n    \"email\": \"junji.ff@nija.com\",\n    \"role\": \"buyer\",\n    \"profile_image\": \"profile1.jpg\"\n}"
+								},
+								{
+									"name": "already exists (buyer1)",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n\t\"username\": \"goftmike\",\r\n\t// \"lastname\": \"Doe\",\r\n\t\"password\": \"oriharu123\",\r\n\t\"email\": \"zope.dd@nija.com\",\r\n\t\"profile_image\": \"profile4.jpg\"\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseurl}}/v1/user",
+											"host": [
+												"{{baseurl}}"
+											],
+											"path": [
+												"v1",
+												"user"
+											]
+										}
+									},
+									"status": "Conflict",
+									"code": 409,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Tue, 07 Jan 2025 08:25:23 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Content-Length",
+											"value": "33"
+										},
+										{
+											"key": "Vary",
+											"value": "Origin"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"message\": \"User already exists\"\n}"
+								},
+								{
+									"name": "200-ok (buyer2)",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n\t\"username\": \"seler\",\r\n\t// \"lastname\": \"Doe\",\r\n\t\"password\": \"orihdsd123\",\r\n\t\"email\": \"e.dd@nija.com\",\r\n\t\"profile_image\": \"profile4.jpg\"\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseurl}}/v1/user",
+											"host": [
+												"{{baseurl}}"
+											],
+											"path": [
+												"v1",
+												"user"
+											]
+										}
+									},
+									"status": "Created",
+									"code": 201,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Tue, 07 Jan 2025 09:33:10 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Content-Length",
+											"value": "208"
+										},
+										{
+											"key": "Vary",
+											"value": "Origin"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": \"3d130e25-a943-4c88-b498-b39582e27357\",\n    \"username\": \"seler\",\n    \"password\": \"$2a$10$AM/BcbF9TIudBSlbFtlbMeSz/4OSF/iWaY58o.cUcisXf11ZXEbF.\",\n    \"email\": \"e.dd@nija.com\",\n    \"role\": \"buyer\",\n    \"profile_image\": \"profile4.jpg\"\n}"
+								}
+							]
+						},
+						{
+							"name": "byid-user",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MzYyNjg5MzQsImlkIjoiN2RhMmZlNGYtMGUyOS00OTUxLWE2YzYtMzcwNzRjMmYyMTg2Iiwicm9sZSI6InNlbGxlciJ9.tdqVSXGakQrfex5b51N-Gy0DYqsiGzb4rbc2mc4DFbg",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseurl}}/v1/user/7da2fe4f-0e29-4951-a6c6-37074c2f2186",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"v1",
+										"user",
+										"7da2fe4f-0e29-4951-a6c6-37074c2f2186"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "edit-user",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MzYxNzQ2MTUsImlkIjoiMTRhMjBiZWItMmE0Yi00NWQzLWIwMDQtMTRmNmVhM2UxMmZiIiwicm9sZSI6ImJ1eWVyIn0._7F-CSIb82WRRINre8FKU3iWtXYn74fawzAvPyjmmnw",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"newwsssssssser\",\r\n    \"email\": \"new_wwwwwwemail@eexxample.com\",\r\n    \"role\": \"admin\",\r\n    \"profile_image\": \"https://example.com/new_image.jpg\"\r\n\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseurl}}/v1/user/edit",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"v1",
+										"user",
+										"edit"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "login/logout",
+					"item": [
+						{
+							"name": "login",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MzYxNzg3ODMsImlkIjoiZGVlZjExMzMtYTAyMy00NTUwLThhZWUtZGI0NzBhMTNhMjM3Iiwicm9sZSI6ImJ1eWVyIn0.2o42APMdx9DXrT16tbh5uGMJoj9HkZC3nSSW62cmNss",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"guitar.ff@nija.com\",\r\n    \"password\": \"ajaxzaza123\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseurl}}/v1/auth/login",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"v1",
+										"auth",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "logout",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MzY1ODMyOTMsImlkIjoiM2QxMzBlMjUtYTk0My00Yzg4LWI0OTgtYjM5NTgyZTI3MzU3Iiwicm9sZSI6ImJ1eWVyIn0.HJRAy7zyq5S5DSgKFUxEKUZGu0sFzXHHrM69Wa-yQ8o",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{baseurl}}/v1/auth/logout",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"v1",
+										"auth",
+										"logout"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "item-shop-manage",
+			"item": [
+				{
+					"name": "byid-items-product-seller",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MzY5MTcwNjcsImlkIjoiN2RhMmZlNGYtMGUyOS00OTUxLWE2YzYtMzcwNzRjMmYyMTg2Iiwicm9sZSI6InNlbGxlciJ9.RPVpJ8Eo27gjwICmGeZoWzkrrx5vlZly2Yi-WlchZTA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/product-managing/seller-id/{{id}}",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"product-managing",
+								"seller-id",
+								"{{id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add-items-product",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MzY5MjQ2NjgsImlkIjoiN2RhMmZlNGYtMGUyOS00OTUxLWE2YzYtMzcwNzRjMmYyMTg2Iiwicm9sZSI6InNlbGxlciJ9.n6S7dkuir6MHlVwsfZ0TIhzr3ajUJdiLmm88HRoB2hI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MzU4OTY0OTYsImlkIjoiMWM5ODFmM2YtMWY0ZS00ZWQzLThiZTctZDI3NzRiYmExMmJmIiwicm9sZSI6InNlbGxlciJ9.2-MoEio8hoQtbU6cXKQRCMmv_LcU0WlrFB9O2U4qSpY",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"product_name\": \"การรูปแบบกก\",\r\n    \"description\": \"A one yayaysddssdsdsdsd!\",\r\n    \"gender\": \"female\",\r\n    \"primary_image\": {\r\n        \"image_url\": \"https://exampe.com/images/primary.jpg\",\r\n        \"is_primary\": true\r\n    },\r\n    \"additional_images\": [\r\n        {\r\n            \"image_url\": \"https://testcode.com/images/extrzaza1.jpg\",\r\n            \"is_primary\": false\r\n        },\r\n        {\r\n            \"image_url\": \"https://chibixib.com/images/extr2.jpg\",\r\n            \"is_primary\": false\r\n        }\r\n    ],\r\n    \"variations\": [\r\n        {\r\n            \"color_id\": \"d7f73878-c5e6-4eee-bd73-d650ce50f18d\",\r\n            \"size_id\": \"b844e07c-4bb3-400a-a4fc-c111067e2403\",\r\n            \"variation_price\": 2000,\r\n            \"quantity\": 50,\r\n            \"image_variations\": \"https://example.com/images/variation1.jpg\"\r\n        },\r\n        {\r\n            \"color_id\": \"7c672439-3d3a-4b13-9063-93f7a2e50d8b\",\r\n            \"size_id\": \"2dab8036-79be-4498-95d6-c06ccad44e36\",\r\n            \"variation_price\": 2000,\r\n            \"quantity\": 160,\r\n            \"image_variations\": \"https://example1.com/images/variation2.jpg\"\r\n        }\r\n    ]\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/product-managing",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"product-managing"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "edit-items-product",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MzY5MjkzNzUsImlkIjoiN2RhMmZlNGYtMGUyOS00OTUxLWE2YzYtMzcwNzRjMmYyMTg2Iiwicm9sZSI6InNlbGxlciJ9.FqWcLk49K6RX7ESNK7vgE1Z8TFLH92vvu01qzJs0Wpo",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"product_name\": \"กางเกงลิงลอยฟ้าาหอมๆ\",\r\n  \"description\": \"ฉันนั้นไม่มีวัน\",\r\n  \"gender\": \"male\",\r\n  \"variations\": [\r\n    {\r\n      \"id\": \"29886953-7f48-4d06-83fc-88e3109552e6\",\r\n      \"variation_price\": 55,\r\n      \"quantity\": 1150,\r\n      \"image_variations\": \"https://example.com/new-image.jpg\"\r\n    },\r\n     {\r\n      \"id\": \"144520fa-bf28-4926-951c-12cccce1bb2b\",\r\n      \"variation_price\": 55,\r\n      \"quantity\": 1150,\r\n      \"image_variations\": \"https://example.com/new-image.jpg\"\r\n    }\r\n  ]\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/product-managing/53986e72-4238-4d65-b788-24df23bc07c5",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"product-managing",
+								"53986e72-4238-4d65-b788-24df23bc07c5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete-items-product",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MzY5MjQ2NjgsImlkIjoiN2RhMmZlNGYtMGUyOS00OTUxLWE2YzYtMzcwNzRjMmYyMTg2Iiwicm9sZSI6InNlbGxlciJ9.n6S7dkuir6MHlVwsfZ0TIhzr3ajUJdiLmm88HRoB2hI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/product-managing/e3fab058-3200-42ed-a703-7bd15adbbe1b",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"product-managing",
+								"e3fab058-3200-42ed-a703-7bd15adbbe1b"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "all-items-product-seller",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MzY5MjkzNzUsImlkIjoiN2RhMmZlNGYtMGUyOS00OTUxLWE2YzYtMzcwNzRjMmYyMTg2Iiwicm9sZSI6InNlbGxlciJ9.FqWcLk49K6RX7ESNK7vgE1Z8TFLH92vvu01qzJs0Wpo",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/product-managing/all",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"product-managing",
+								"all"
+							],
+							"query": [
+								{
+									"key": "gender",
+									"value": "male",
+									"disabled": true
+								},
+								{
+									"key": "is_archive",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "item-shop",
+			"item": [
+				{
+					"name": "all-items-product",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true,
+						"insecureHTTPParser": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MzY0MDg0MDksImlkIjoiN2RhMmZlNGYtMGUyOS00OTUxLWE2YzYtMzcwNzRjMmYyMTg2Iiwicm9sZSI6InNlbGxlciJ9.XDDdJRRpVFxZg2dcTfrxl3x3lgN6zTuRJ5ZlZBPpafU",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/items-product/all/buyer",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"items-product",
+								"all",
+								"buyer"
+							],
+							"query": [
+								{
+									"key": "gender",
+									"value": "male",
+									"disabled": true
+								},
+								{
+									"key": "is_achive",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "200-ok",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseurl}}/items-product/?gender=male",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"items-product",
+										""
+									],
+									"query": [
+										{
+											"key": "gender",
+											"value": "male"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Fri, 27 Dec 2024 03:59:47 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "1009"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"id\": \"191fa5e1-5e3d-4e4e-b442-bc03c09ce5b9\",\n        \"product_name\": \"ิbฟ\",\n        \"description\": \"A one yayayaddddddddddddddddddddddddddddddddddddddกกกกกกกกกกกกกกกกกกกdddd!\",\n        \"seller_id\": \"8a06f564-1b40-46f6-bb2f-0d4b8e3679ff\",\n        \"gender\": \"male\",\n        \"variations\": [\n            {\n                \"id\": \"098bb69e-3bd9-43f6-820b-a47816fd0fe9\",\n                \"color_type\": \"red\",\n                \"size_type\": \"m\",\n                \"variation_price\": 1999,\n                \"quantity\": 50,\n                \"image_variations\": \"https://example.com/images/variation1.jpg\"\n            },\n            {\n                \"id\": \"c6800f7d-61a8-4ed5-8a3d-8d45050a660c\",\n                \"color_type\": \"blue\",\n                \"size_type\": \"s\",\n                \"variation_price\": 2499,\n                \"quantity\": 100,\n                \"image_variations\": \"https://example.com/images/variation2.jpg\"\n            }\n        ],\n        \"primary_image\": {\n            \"image_url\": \"https://example.com/images/primary.jpg\",\n            \"is_primary\": true\n        },\n        \"additional_images\": [\n            {\n                \"image_url\": \"https://example.com/images/extra2.jpg\",\n                \"is_primary\": false\n            },\n            {\n                \"image_url\": \"https://example.com/images/extra1.jpg\",\n                \"is_primary\": false\n            }\n        ],\n        \"is_archive\": false,\n        \"created_at\": \"2024-12-25T17:25:31.211355Z\",\n        \"updated_at\": \"2024-12-25T17:25:31.211355Z\"\n    }\n]"
+						},
+						{
+							"name": "200-ok not data",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseurl}}/items-product/all/buyer",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"items-product",
+										"all",
+										"buyer"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Fri, 10 Jan 2025 06:38:06 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "2"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								}
+							],
+							"cookie": [],
+							"body": "[]"
+						},
+						{
+							"name": "all-items-product",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseurl}}/items-product/all/buyer",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"items-product",
+										"all",
+										"buyer"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "6",
+											"disabled": true
+										},
+										{
+											"key": "size",
+											"value": "3",
+											"disabled": true
+										},
+										{
+											"key": "gender",
+											"value": "female",
+											"disabled": true
+										},
+										{
+											"key": "is_achive",
+											"value": "falsesdds",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Sat, 11 Jan 2025 18:14:03 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "6472"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"prduct_detail\": [\n        {\n            \"id\": \"8b594a93-1b57-449a-8e82-ca3da0da6d08\",\n            \"product_name\": \"sunalazaza\",\n            \"description\": \"A one yayaysddssdsdsdsd!\",\n            \"seller_id\": \"06389e0f-cdbd-41df-9de2-fe8f4a2619d0\",\n            \"gender\": \"female\",\n            \"variations\": [\n                {\n                    \"id\": \"3c5e08a8-d8d4-4637-a941-cba604323d62\",\n                    \"color_type\": \"red\",\n                    \"size_type\": \"s\",\n                    \"variation_price\": 2000,\n                    \"quantity\": 160,\n                    \"image_variations\": \"https://example1.com/images/variation2.jpg\"\n                },\n                {\n                    \"id\": \"ebc04d7b-dd38-426d-9fa2-9689bd1419a4\",\n                    \"color_type\": \"blue\",\n                    \"size_type\": \"m\",\n                    \"variation_price\": 2000,\n                    \"quantity\": 50,\n                    \"image_variations\": \"https://example.com/images/variation1.jpg\"\n                }\n            ],\n            \"primary_image\": {\n                \"image_url\": \"https://example1.com/images/primary.jpg\",\n                \"is_primary\": true\n            },\n            \"additional_images\": null,\n            \"is_archive\": false,\n            \"created_at\": \"2025-01-12T00:53:11.385156Z\",\n            \"updated_at\": \"2025-01-12T00:53:11.385156Z\"\n        },\n        {\n            \"id\": \"690a15fa-e94d-4dbb-a838-693013f13efa\",\n            \"product_name\": \"sunalazaza\",\n            \"description\": \"A one yayaysddssdsdsdsd!\",\n            \"seller_id\": \"06389e0f-cdbd-41df-9de2-fe8f4a2619d0\",\n            \"gender\": \"female\",\n            \"variations\": [\n                {\n                    \"id\": \"eeacd3eb-910d-4148-83d5-94e7c09d670c\",\n                    \"color_type\": \"red\",\n                    \"size_type\": \"s\",\n                    \"variation_price\": 2000,\n                    \"quantity\": 160,\n                    \"image_variations\": \"https://example1.com/images/variation2.jpg\"\n                },\n                {\n                    \"id\": \"9419a55c-fd70-497e-8a24-9eb00b814375\",\n                    \"color_type\": \"blue\",\n                    \"size_type\": \"m\",\n                    \"variation_price\": 2000,\n                    \"quantity\": 50,\n                    \"image_variations\": \"https://example.com/images/variation1.jpg\"\n                }\n            ],\n            \"primary_image\": {\n                \"image_url\": \"https://example1.com/images/primary.jpg\",\n                \"is_primary\": true\n            },\n            \"additional_images\": null,\n            \"is_archive\": false,\n            \"created_at\": \"2025-01-11T22:56:41.477934Z\",\n            \"updated_at\": \"2025-01-11T22:56:41.477934Z\"\n        },\n        {\n            \"id\": \"fdbf7c8b-78c8-401b-bf70-3bd25a22bc7a\",\n            \"product_name\": \"sunalazaza\",\n            \"description\": \"A one yayaysddssdsdsdsd!\",\n            \"seller_id\": \"06389e0f-cdbd-41df-9de2-fe8f4a2619d0\",\n            \"gender\": \"female\",\n            \"variations\": [\n                {\n                    \"id\": \"9b0a0fdd-17a0-4cae-bfbb-a87e8d12197d\",\n                    \"color_type\": \"red\",\n                    \"size_type\": \"s\",\n                    \"variation_price\": 2000,\n                    \"quantity\": 160,\n                    \"image_variations\": \"https://example1.com/images/variation2.jpg\"\n                },\n                {\n                    \"id\": \"47d522d9-40c3-4a23-8f43-39914f9ae20e\",\n                    \"color_type\": \"blue\",\n                    \"size_type\": \"m\",\n                    \"variation_price\": 2000,\n                    \"quantity\": 50,\n                    \"image_variations\": \"https://example.com/images/variation1.jpg\"\n                }\n            ],\n            \"primary_image\": {\n                \"image_url\": \"https://example1.com/images/primary.jpg\",\n                \"is_primary\": true\n            },\n            \"additional_images\": null,\n            \"is_archive\": false,\n            \"created_at\": \"2025-01-11T22:56:39.381413Z\",\n            \"updated_at\": \"2025-01-11T22:56:39.381413Z\"\n        },\n        {\n            \"id\": \"d889751d-3a7c-4f7e-9992-53e29728040e\",\n            \"product_name\": \"sunalazaza\",\n            \"description\": \"A one yayaysddssdsdsdsd!\",\n            \"seller_id\": \"06389e0f-cdbd-41df-9de2-fe8f4a2619d0\",\n            \"gender\": \"female\",\n            \"variations\": [\n                {\n                    \"id\": \"04b08ddf-eef8-427e-a604-95a6d40c4c99\",\n                    \"color_type\": \"red\",\n                    \"size_type\": \"s\",\n                    \"variation_price\": 2000,\n                    \"quantity\": 160,\n                    \"image_variations\": \"https://example1.com/images/variation2.jpg\"\n                },\n                {\n                    \"id\": \"ffc1b893-d7b1-4cd0-9a83-957a91e31e19\",\n                    \"color_type\": \"blue\",\n                    \"size_type\": \"m\",\n                    \"variation_price\": 2000,\n                    \"quantity\": 50,\n                    \"image_variations\": \"https://example.com/images/variation1.jpg\"\n                }\n            ],\n            \"primary_image\": {\n                \"image_url\": \"https://example1.com/images/primary.jpg\",\n                \"is_primary\": true\n            },\n            \"additional_images\": null,\n            \"is_archive\": false,\n            \"created_at\": \"2025-01-10T17:05:49.787935Z\",\n            \"updated_at\": \"2025-01-10T17:05:49.787935Z\"\n        },\n        {\n            \"id\": \"dbfafbef-bd90-45d7-b5ab-1db94c59e032\",\n            \"product_name\": \"sunalazaza\",\n            \"description\": \"A one yayaysddssdsdsdsd!\",\n            \"seller_id\": \"7da2fe4f-0e29-4951-a6c6-37074c2f2186\",\n            \"gender\": \"female\",\n            \"variations\": [\n                {\n                    \"id\": \"e6e55acd-3bb9-41e6-a288-fb0d650c6d7b\",\n                    \"color_type\": \"red\",\n                    \"size_type\": \"s\",\n                    \"variation_price\": 2000,\n                    \"quantity\": 160,\n                    \"image_variations\": \"https://example1.com/images/variation2.jpg\"\n                },\n                {\n                    \"id\": \"7fcd7f44-2f75-455e-bef9-13f6319b63aa\",\n                    \"color_type\": \"blue\",\n                    \"size_type\": \"m\",\n                    \"variation_price\": 2000,\n                    \"quantity\": 50,\n                    \"image_variations\": \"https://example.com/images/variation1.jpg\"\n                }\n            ],\n            \"primary_image\": {\n                \"image_url\": \"https://example1.com/images/primary.jpg\",\n                \"is_primary\": true\n            },\n            \"additional_images\": null,\n            \"is_archive\": false,\n            \"created_at\": \"2025-01-08T15:14:54.620014Z\",\n            \"updated_at\": \"2025-01-08T15:14:54.620014Z\"\n        },\n        {\n            \"id\": \"6595cbd8-2959-4d81-9672-fff792ac1da2\",\n            \"product_name\": \"sunalazaza\",\n            \"description\": \"A one yayaysddssdsdsdsd!\",\n            \"seller_id\": \"7da2fe4f-0e29-4951-a6c6-37074c2f2186\",\n            \"gender\": \"female\",\n            \"variations\": [\n                {\n                    \"id\": \"0df4f00e-3c49-440e-a7bd-eea6329e0157\",\n                    \"color_type\": \"red\",\n                    \"size_type\": \"s\",\n                    \"variation_price\": 2000,\n                    \"quantity\": 160,\n                    \"image_variations\": \"https://example1.com/images/variation2.jpg\"\n                },\n                {\n                    \"id\": \"383533ab-5a17-417b-a9b1-f27e6df53041\",\n                    \"color_type\": \"blue\",\n                    \"size_type\": \"m\",\n                    \"variation_price\": 2000,\n                    \"quantity\": 50,\n                    \"image_variations\": \"https://example.com/images/variation1.jpg\"\n                }\n            ],\n            \"primary_image\": {\n                \"image_url\": \"https://example1.com/images/primary.jpg\",\n                \"is_primary\": true\n            },\n            \"additional_images\": null,\n            \"is_archive\": false,\n            \"created_at\": \"2025-01-08T15:14:50.471952Z\",\n            \"updated_at\": \"2025-01-08T15:14:50.471952Z\"\n        },\n        {\n            \"id\": \"c9539775-a8fa-4791-a4d4-85edd11319a2\",\n            \"product_name\": \"junji network\",\n            \"description\": \"A one yayaysddsdssdsdsd!\",\n            \"seller_id\": \"7da2fe4f-0e29-4951-a6c6-37074c2f2186\",\n            \"gender\": \"male\",\n            \"variations\": [\n                {\n                    \"id\": \"2ebed1e4-dc4d-4384-bece-f34d85ac1577\",\n                    \"color_type\": \"red\",\n                    \"size_type\": \"s\",\n                    \"variation_price\": 2000,\n                    \"quantity\": 160,\n                    \"image_variations\": \"https://example1.com/images/variation2.jpg\"\n                },\n                {\n                    \"id\": \"ca8e6327-a84d-44bc-be17-ed728db0bb3d\",\n                    \"color_type\": \"blue\",\n                    \"size_type\": \"m\",\n                    \"variation_price\": 2000,\n                    \"quantity\": 50,\n                    \"image_variations\": \"https://example.com/images/variation1.jpg\"\n                }\n            ],\n            \"primary_image\": {\n                \"image_url\": \"https://example1.com/images/primary.jpg\",\n                \"is_primary\": true\n            },\n            \"additional_images\": null,\n            \"is_archive\": false,\n            \"created_at\": \"2025-01-08T14:40:50.968582Z\",\n            \"updated_at\": \"2025-01-09T07:50:02.269193Z\"\n        },\n        {\n            \"id\": \"89e216ad-af39-4173-924a-7a5c99f5a73e\",\n            \"product_name\": \"sunalazaza\",\n            \"description\": \"A one yayaysddssdsdsdsd!\",\n            \"seller_id\": \"06389e0f-cdbd-41df-9de2-fe8f4a2619d0\",\n            \"gender\": \"female\",\n            \"variations\": [\n                {\n                    \"id\": \"95a3fc9e-ac85-4ffd-b77d-f70354db3186\",\n                    \"color_type\": \"red\",\n                    \"size_type\": \"s\",\n                    \"variation_price\": 2000,\n                    \"quantity\": 160,\n                    \"image_variations\": \"https://example1.com/images/variation2.jpg\"\n                },\n                {\n                    \"id\": \"443bf8ca-448b-40d8-b9d0-000374ba342c\",\n                    \"color_type\": \"blue\",\n                    \"size_type\": \"m\",\n                    \"variation_price\": 2000,\n                    \"quantity\": 50,\n                    \"image_variations\": \"https://example.com/images/variation1.jpg\"\n                }\n            ],\n            \"primary_image\": {\n                \"image_url\": \"https://example1.com/images/primary.jpg\",\n                \"is_primary\": true\n            },\n            \"additional_images\": [\n                {\n                    \"image_url\": \"https://example1.com/images/extra2.jpg\",\n                    \"is_primary\": false\n                },\n                {\n                    \"image_url\": \"https://example.com/images/extra1.jpg\",\n                    \"is_primary\": false\n                }\n            ],\n            \"is_archive\": false,\n            \"created_at\": \"2025-01-12T00:53:18.225961Z\",\n            \"updated_at\": \"2025-01-12T00:53:18.225961Z\"\n        }\n    ],\n    \"paginate\": {\n        \"page\": 1,\n        \"totalpage\": 1\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "byid-items-product",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/items-product/{{id}}",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"items-product",
+								"{{id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "health-Server",
+			"item": [
+				{
+					"name": "health-check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/v1/healthcheck",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"v1",
+								"healthcheck"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "error loss connect db",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseurl}}/v1/healthcheck",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"v1",
+										"healthcheck"
+									]
+								}
+							},
+							"status": "Internal Server Error",
+							"code": 500,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Mon, 13 Jan 2025 08:31:00 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "156"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"error\": \"read tcp [::1]:53649->[::1]:5432: wsarecv: An established connection was aborted by the software in your host machine.\",\n    \"status\": \"🔴 DOWN\"\n}"
+						},
+						{
+							"name": "200-ok",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseurl}}/v1/healthcheck",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"v1",
+										"healthcheck"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Mon, 13 Jan 2025 08:32:35 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "60"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": \"🟢 UP\",\n    \"timestamp\": \"2025-01-13T15:32:35+07:00\"\n}"
+						}
+					]
+				},
+				{
+					"name": "panic-check (unsed)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/panic",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"panic"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "500 serv",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseurl}}/panic",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"panic"
+									]
+								}
+							},
+							"status": "Internal Server Error",
+							"code": 500,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 11 Dec 2024 04:49:10 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "text/plain; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "20"
+								}
+							],
+							"cookie": [],
+							"body": "This is a test panic"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "admin",
+			"item": [
+				{
+					"name": "all-users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/v1/admin",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"v1",
+								"admin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "setrole-users",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "address",
+			"item": [
+				{
+					"name": "add-address",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MzYzMjQ4NDcsImlkIjoiNzFkMTExYjAtMjVmOC00YzVkLTg1NmYtZjJiNmYxNDRiNmQyIiwicm9sZSI6ImJ1eWVyIn0.9ZXdIncIO1FPbB-LndqCDCiqfooPDZbCdzgolPmJsyg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"recipient_name\": \"John Doe\",\r\n    \"province\": \"lopburi\",\r\n    \"district\": \"lopburi\",\r\n    \"subdistrict\": \"loburi\",\r\n    \"postal\": \"10500\",\r\n    \"address_line\": \"123/45 Si Lmaa\",\r\n    \"contact\": \"0801233567\",\r\n    \"favorite\": true\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/v1/user/address",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"v1",
+								"user",
+								"address"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "all-address",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MzY1OTA2MDMsImlkIjoiNzFkMTExYjAtMjVmOC00YzVkLTg1NmYtZjJiNmYxNDRiNmQyIiwicm9sZSI6ImJ1eWVyIn0.1c9BxUcKC6KZuQ4FP_k1mGhVvjpp4v49Q3GAl4VklIg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/v1/user/address/all",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"v1",
+								"user",
+								"address",
+								"all"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "200-ok",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseurl}}/v1/user/address/all",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"v1",
+										"user",
+										"address",
+										"all"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Tue, 07 Jan 2025 15:22:30 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "558"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"id\": \"8abe65ed-428b-45c5-a0bd-cea686a075bc\",\n        \"user_id\": \"71d111b0-25f8-4c5d-856f-f2b6f144b6d2\",\n        \"recipient_name\": \"John Doe\",\n        \"province\": \"Bangkok\",\n        \"district\": \"Bang Rak\",\n        \"subdistrict\": \"Si Lom\",\n        \"postal\": \"10500\",\n        \"address_line\": \"123/45 Si Lom Road\",\n        \"contact\": \"0801234567\",\n        \"favorite\": true\n    },\n    {\n        \"id\": \"92d53dac-d5b9-435e-ad75-17e9974c1262\",\n        \"user_id\": \"71d111b0-25f8-4c5d-856f-f2b6f144b6d2\",\n        \"recipient_name\": \"John Doe\",\n        \"province\": \"lopburi\",\n        \"district\": \"lopburi\",\n        \"subdistrict\": \"loburi\",\n        \"postal\": \"10500\",\n        \"address_line\": \"123/45 Si Lmaa\",\n        \"contact\": \"0801233567\",\n        \"favorite\": true\n    }\n]"
+						}
+					]
+				},
+				{
+					"name": "byid-address",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MzYzMzIxNzAsImlkIjoiNzFkMTExYjAtMjVmOC00YzVkLTg1NmYtZjJiNmYxNDRiNmQyIiwicm9sZSI6ImJ1eWVyIn0.9tApFq3lBZ5cjTf1hUEEvjGRZ3EoX1S8T2rRNrRGFbg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/v1/user/address/8abe65ed-428b-45c5-a0bd-cea686a075bc",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"v1",
+								"user",
+								"address",
+								"8abe65ed-428b-45c5-a0bd-cea686a075bc"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "404 Not Found",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseurl}}/v1/user/address/92d53dac-d5b9-435e-ad75-17e9974c1262",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"v1",
+										"user",
+										"address",
+										"92d53dac-d5b9-435e-ad75-17e9974c1262"
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Tue, 07 Jan 2025 09:36:13 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "31"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Address not found\"\n}"
+						},
+						{
+							"name": "200-ok",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseurl}}/v1/user/address/8abe65ed-428b-45c5-a0bd-cea686a075bc",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"v1",
+										"user",
+										"address",
+										"8abe65ed-428b-45c5-a0bd-cea686a075bc"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Tue, 07 Jan 2025 10:30:44 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "280"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": \"8abe65ed-428b-45c5-a0bd-cea686a075bc\",\n    \"user_id\": \"71d111b0-25f8-4c5d-856f-f2b6f144b6d2\",\n    \"recipient_name\": \"John Doe\",\n    \"province\": \"Bangkok\",\n    \"district\": \"Bang Rak\",\n    \"subdistrict\": \"Si Lom\",\n    \"postal\": \"10500\",\n    \"address_line\": \"123/45 Si Lom Road\",\n    \"contact\": \"0801234567\",\n    \"favorite\": true\n}"
+						}
+					]
+				},
+				{
+					"name": "favorite",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MzYzNDg4MzUsImlkIjoiNzFkMTExYjAtMjVmOC00YzVkLTg1NmYtZjJiNmYxNDRiNmQyIiwicm9sZSI6ImJ1eWVyIn0.N_McyWkSMkqfuCgkxAH466Ej3uNRmpcWBU34pUjtgWQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"favorite\": true\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/v1/user/address/8abe65ed-428b-45c5-a0bd-cea686a075bc/favorite",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"v1",
+								"user",
+								"address",
+								"8abe65ed-428b-45c5-a0bd-cea686a075bc",
+								"favorite"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MzYzNDg4MzUsImlkIjoiNzFkMTExYjAtMjVmOC00YzVkLTg1NmYtZjJiNmYxNDRiNmQyIiwicm9sZSI6ImJ1eWVyIn0.N_McyWkSMkqfuCgkxAH466Ej3uNRmpcWBU34pUjtgWQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/v1/user/address/92d53dac-d5b9-435e-ad75-17e9974c1262",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"v1",
+								"user",
+								"address",
+								"92d53dac-d5b9-435e-ad75-17e9974c1262"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "200-ok",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseurl}}/v1/user/address/92d53dac-d5b9-435e-ad75-17e9974c1262",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"v1",
+										"user",
+										"address",
+										"92d53dac-d5b9-435e-ad75-17e9974c1262"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 08 Jan 2025 03:39:42 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "42"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Address deleted successfully\"\n}"
+						}
+					]
+				},
+				{
+					"name": "edit",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MzYzNDg4MzUsImlkIjoiNzFkMTExYjAtMjVmOC00YzVkLTg1NmYtZjJiNmYxNDRiNmQyIiwicm9sZSI6ImJ1eWVyIn0.N_McyWkSMkqfuCgkxAH466Ej3uNRmpcWBU34pUjtgWQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"recipient_name\": \"poonyapath zaza\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/v1/user/address/6c667387-6962-43b1-9893-21ee6098cfab",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"v1",
+								"user",
+								"address",
+								"6c667387-6962-43b1-9893-21ee6098cfab"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseurl",
+			"value": "http://localhost:8080",
+			"type": "string"
+		},
+		{
+			"key": "id",
+			"value": "e52a767b-79ec-4577-a424-409ec8961a3e",
+			"type": "string"
+		},
+		{
+			"key": "auth->token",
+			"value": "sdasdsdsadsds",
+			"type": "string"
+		}
+	]
+}

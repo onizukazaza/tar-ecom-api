@@ -1,0 +1,83 @@
+package controller
+
+import (
+	"fmt"
+	"github.com/gofiber/fiber/v2"
+	"github.com/golang-jwt/jwt/v5"
+    _OauthException "github.com/onizukazaza/tar-ecom-api/pkg/oauth2/exception"
+	"errors"
+)
+
+// JWT Middleware for token validation
+func JWTMiddleware(secretKey string) fiber.Handler {
+	return func(ctx *fiber.Ctx) error {
+		tokenString, err := ExtractTokenFromHeader(ctx)
+		if err != nil {
+			return &_OauthException.Unauthorized{}
+		}
+
+		claims := jwt.MapClaims{}
+		token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
+			return []byte(secretKey), nil
+		})
+		if err != nil {
+			// check Token หมดอายุหรือไม่
+			if errors.Is(err, jwt.ErrTokenExpired) {
+				return ctx.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "token expired"})
+			}
+			return &_OauthException.Unauthorized{}
+		}
+
+		if !token.Valid {
+			return &_OauthException.Unauthorized{}
+		}
+
+		ctx.Locals("userID", claims["id"])
+		ctx.Locals("role", claims["role"])
+		return ctx.Next()
+	}
+}
+
+// Extract Token from Authorization Header
+func ExtractTokenFromHeader(ctx *fiber.Ctx) (string, error) {
+	tokenString := ctx.Get("Authorization")
+	if tokenString == "" {
+		return "", fmt.Errorf("missing token")
+	}
+
+	if len(tokenString) > 7 && tokenString[:7] == "Bearer " {
+		return tokenString[7:], nil
+	}
+	return "", fmt.Errorf("invalid token format")
+}
+
+
+// Role Authorizing Middleware
+func RoleAuthorizing(ctx *fiber.Ctx, requiredRole string) error {
+	role := ctx.Locals("role")
+	if role != requiredRole {
+		return ctx.Status(fiber.StatusForbidden).JSON(fiber.Map{"error": fmt.Sprintf("access restricted to %s", requiredRole)})
+	}
+	return ctx.Next()
+}
+
+
+func (c *oauth2ControllerImpl) UserAuthorizing(ctx *fiber.Ctx) error {
+	tokenString, err := ExtractTokenFromHeader(ctx)
+	if err != nil {
+		return ctx.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "missing or invalid token"})
+	}
+
+	// Validate the token
+	claims := jwt.MapClaims{}
+	token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
+		return []byte(c.secretKey), nil
+	})
+	if err != nil || !token.Valid {
+		return ctx.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "invalid or expired token"})
+	}
+
+	ctx.Locals("userID", claims["id"])
+	ctx.Locals("role", claims["role"])
+	return ctx.Next()
+}

@@ -36,7 +36,7 @@ func NewPostgresDatabase(conf *config.Database) Database {
 			log.Fatalf("Failed to connect to database: %v", err)
 		}
 
-		log.Printf("Connected to database %s", conf.DBName)
+		log.Printf("🛢️  Connected to database postgres %s", conf.DBName)
 
 		postgresDatabaseInstance = &postgresDatabase{conn}
 	})
@@ -46,3 +46,4 @@ func NewPostgresDatabase(conf *config.Database) Database {
 func (db *postgresDatabase) Connect() *sqlx.DB {
 	return db.DB
 }
+

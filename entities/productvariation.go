@@ -1,13 +1,34 @@
 package entities
 
-import "time"
+import (
+	"time"
+
+	"github.com/google/uuid"
+	_productManagingModel "github.com/onizukazaza/tar-ecom-api/pkg/productManaging/model"
+)
 
 type ProductVariation struct {
-	ID             int       `db:"id"`                 
-	ProductID      int       `db:"product_id"`         
-	VariationValue string    `db:"variation_value"`    
-	ImageVariation string    `db:"image_variation"`    
-	Price          uint      `db:"price"`              
-	CreatedAt      time.Time `db:"created_at"`         
-	UpdatedAt      time.Time `db:"updated_at"`         
+	ID              uuid.UUID `db:"id"`
+	ProductID       uuid.UUID `db:"product_id"`
+	ColorID         uuid.UUID `db:"color_id"`
+	SizeID          uuid.UUID `db:"size_id"`
+	Color           Color     `db:"-"`
+	Size            Size      `db:"-"`
+	VariationPrice  float64   `db:"variation_price"`
+	Quantity        int       `db:"quantity"`
+	ImageVariations string    `db:"image_variation"`
+	CreatedAt       time.Time `db:"created_at"`
+	UpdatedAt       time.Time `db:"updated_at"`
+
+}
+
+func (pv *ProductVariation) ToModel(colorType string, sizeType string) _productManagingModel.ProductVariationInfo {
+	return _productManagingModel.ProductVariationInfo{
+		ID:              pv.ID.String(),
+		ColorType:       colorType,
+		SizeType:        sizeType,
+		VariationPrice:  pv.VariationPrice,
+		Quantity:        pv.Quantity,
+		ImageVariations: pv.ImageVariations,
+	}
 }

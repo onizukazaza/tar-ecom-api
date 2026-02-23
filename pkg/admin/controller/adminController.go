@@ -5,5 +5,6 @@ import (
 )
 
 type AdminController interface {
-    Listing(ctx *fiber.Ctx) error
+    SetRole(ctx *fiber.Ctx) error
+	
 }
